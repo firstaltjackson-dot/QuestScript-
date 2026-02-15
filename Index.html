@@ -174,11 +174,87 @@
             border: 2px solid #4ecca3;
             border-radius: 5px;
             padding: 15px;
-            min-height: 150px;
-            max-height: 300px;
+            min-height: 250px;
+            max-height: 450px;
             overflow-y: auto;
             font-size: 14px;
             margin-top: 15px;
+        }
+        
+        .fullscreen-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(78, 204, 163, 0.3);
+            border: 2px solid #4ecca3;
+            color: #4ecca3;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        
+        .fullscreen-btn:hover {
+            background: rgba(78, 204, 163, 0.5);
+            transform: scale(1.1);
+        }
+        
+        #game-canvas.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 9999;
+            border-radius: 0;
+        }
+        
+        .combat-prompt {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 3px solid #ffd700;
+            padding: 30px;
+            border-radius: 15px;
+            z-index: 10000;
+            text-align: center;
+            min-width: 300px;
+        }
+        
+        .combat-prompt h3 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .combat-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+        
+        .combat-btn:hover {
+            background: #ff5252;
+            transform: scale(1.05);
+        }
+        
+        .combat-btn.defend {
+            background: #4ecca3;
+        }
+        
+        .combat-btn.defend:hover {
+            background: #45b393;
         }
         
         .output-line {
@@ -260,15 +336,26 @@
             top: 10px;
             left: 10px;
             background: rgba(0, 0, 0, 0.7);
-            padding: 10px;
+            padding: 8px 10px;
             border-radius: 5px;
-            font-size: 14px;
+            font-size: 18px;
+        }
+        
+        .heart {
+            display: inline-block;
+            margin: 0 1px;
+            transition: all 0.3s;
+        }
+        
+        .heart.lost {
+            opacity: 0.2;
+            filter: grayscale(100%);
         }
         
         .score-display {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 50px;
+            left: 10px;
             background: rgba(0, 0, 0, 0.7);
             padding: 10px;
             border-radius: 5px;
@@ -284,7 +371,145 @@
             padding: 10px;
             border-radius: 5px;
             font-size: 14px;
-            max-width: 200px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .inventory-display:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.05);
+        }
+        
+        .inventory-menu {
+            position: absolute;
+            bottom: 60px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 3px solid #4ecca3;
+            padding: 20px;
+            border-radius: 10px;
+            min-width: 300px;
+            max-width: 400px;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .inventory-menu.open {
+            display: block;
+        }
+        
+        .inventory-menu h3 {
+            color: #4ecca3;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #4ecca3;
+            padding-bottom: 10px;
+        }
+        
+        .inventory-item {
+            background: rgba(78, 204, 163, 0.1);
+            border: 2px solid #4ecca3;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .inventory-item:hover {
+            background: rgba(78, 204, 163, 0.2);
+            transform: translateX(5px);
+        }
+        
+        .inventory-item.equipped {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.2);
+        }
+        
+        .inventory-item-name {
+            color: #e8e8e8;
+            font-weight: bold;
+        }
+        
+        .inventory-item-stats {
+            color: #ffd700;
+            font-size: 12px;
+        }
+        
+        .equip-btn {
+            background: #4ecca3;
+            color: #1a1a2e;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .equip-btn:hover {
+            background: #45b393;
+        }
+        
+        .equip-btn.equipped {
+            background: #ff6b6b;
+        }
+        
+        .drop-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-left: 5px;
+        }
+        
+        .drop-btn:hover {
+            background: #ff5252;
+        }
+        
+        .infinite-mode-display {
+            position: absolute;
+            top: 90px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            color: #ffd700;
+            display: none;
+        }
+        
+        .infinite-mode-display.active {
+            display: block;
+        }
+        
+        .difficulty-bar {
+            width: 100px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .difficulty-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ecca3, #ffd700, #ff6b6b);
+            transition: width 0.3s;
+        }
+        
+        .no-items {
+            color: #888;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
         }
         
         .collision-effect {
@@ -526,6 +751,7 @@ SAY "Quest complete! Score: " + hero.score FOR 2000</textarea>
                     <button onclick="stopCode()" class="secondary-btn">⏹️ STOP</button>
                     <button onclick="clearCanvas()" class="secondary-btn">🗑️ CLEAR</button>
                     <button onclick="toggleSound()" class="secondary-btn">🔊 SOUND: <span id="sound-status">ON</span></button>
+                    <button onclick="toggleInfiniteMode()" class="secondary-btn" id="infinite-mode-btn">🌍 INFINITE MODE</button>
                 </div>
                 
                 <div id="output"></div>
@@ -534,9 +760,27 @@ SAY "Quest complete! Score: " + hero.score FOR 2000</textarea>
             <div class="panel">
                 <h2>🎮 Game World</h2>
                 <div id="game-canvas">
-                    <div class="health-bar" id="health-display">❤️ Health: --</div>
-                    <div class="score-display" id="score-display">⭐ Score: --</div>
-                    <div class="inventory-display" id="inventory-display">🎒 Inventory: --</div>
+                    <button class="fullscreen-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen">⛶</button>
+                    <div class="health-bar" id="health-display">
+                        <span class="heart">❤️</span><span class="heart">❤️</span><span class="heart">❤️</span><span class="heart">❤️</span><span class="heart">❤️</span>
+                    </div>
+                    <div class="score-display" id="score-display">⭐ Score: 0</div>
+                    <div class="infinite-mode-display" id="infinite-display">
+                        🌍 Infinite Mode<br>
+                        Difficulty: <span id="difficulty-level">1</span>
+                        <div class="difficulty-bar">
+                            <div class="difficulty-fill" id="difficulty-fill" style="width: 10%"></div>
+                        </div>
+                    </div>
+                    <div class="inventory-display" id="inventory-display" onclick="toggleInventoryMenu()">
+                        🎒 Inventory (Click)
+                    </div>
+                    <div class="inventory-menu" id="inventory-menu">
+                        <h3>⚔️ Equipment</h3>
+                        <div id="inventory-items">
+                            <div class="no-items">No items in inventory</div>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="syntax-guide">
@@ -617,6 +861,33 @@ SAY "Quest complete! Score: " + hero.score FOR 2000</textarea>
         let keyboardControlEnabled = false;
         let controlledSprite = null;
         let keyboardListener = null;
+        let combatInProgress = false;
+        let treasuresCollected = [];
+        let equippedItems = {};
+        let maxHealth = 5;
+        
+        // Infinite mode variables
+        let infiniteModeEnabled = false;
+        let difficultyLevel = 1;
+        let enemySpawnTimer = null;
+        let treasureSpawnTimer = null;
+        let enemyCounter = 0;
+        
+        // Enemy types that get progressively harder
+        const enemyTypes = ['👾', '👻', '💀', '👹', '🐉', '🧟', '🧛'];
+        const treasureTypes = ['🪙', '💎', '👑', '💰'];
+        
+        // Weapon damage values
+        const weaponDamage = {
+            'sword': 25,
+            'legendary sword': 40,
+            'dagger': 15,
+            'axe': 30,
+            'bow': 20,
+            'staff': 18,
+            'hammer': 35,
+            'shield': 5  // minimal damage for shield
+        };
         
         const examples = {
             rpg: `// Full RPG Battle with PRO features
@@ -1145,29 +1416,39 @@ PLAY SOUND "win"`
             
             if (action === 'add') {
                 inventories[name].push(item);
-                updateInventoryDisplay(name);
                 log(`📦 ${item} added to ${name}'s inventory`);
+                
+                // Update menu if it's open and this is the controlled sprite
+                if (controlledSprite === name) {
+                    const menu = document.getElementById('inventory-menu');
+                    if (menu.classList.contains('open')) {
+                        updateInventoryMenuDisplay();
+                    }
+                }
             } else if (action === 'remove') {
                 const index = inventories[name].indexOf(item);
                 if (index > -1) {
                     inventories[name].splice(index, 1);
-                    updateInventoryDisplay(name);
                     log(`📦 ${item} removed from ${name}'s inventory`);
+                    
+                    // Unequip if it was equipped
+                    if (equippedItems[name] === item) {
+                        delete equippedItems[name];
+                    }
+                    
+                    // Update menu if it's open and this is the controlled sprite
+                    if (controlledSprite === name) {
+                        const menu = document.getElementById('inventory-menu');
+                        if (menu.classList.contains('open')) {
+                            updateInventoryMenuDisplay();
+                        }
+                    }
                 }
             }
         }
         
         function hasInInventory(name, item) {
             return inventories[name] && inventories[name].includes(item);
-        }
-        
-        function updateInventoryDisplay(name) {
-            const display = document.getElementById('inventory-display');
-            if (inventories[name] && inventories[name].length > 0) {
-                display.textContent = `🎒 ${name}: ${inventories[name].join(', ')}`;
-            } else {
-                display.textContent = `🎒 Inventory: --`;
-            }
         }
         
         function showMessage(text, duration) {
@@ -1197,10 +1478,123 @@ PLAY SOUND "win"`
         
         function updateDisplay(property, value) {
             if (property.includes('health')) {
-                document.getElementById('health-display').textContent = `❤️ Health: ${value}`;
+                updateHealthHearts(value);
             } else if (property.includes('score')) {
                 document.getElementById('score-display').textContent = `⭐ Score: ${value}`;
             }
+        }
+        
+        function updateHealthHearts(health) {
+            const hearts = document.querySelectorAll('.heart');
+            const heartsToShow = Math.max(0, Math.min(5, Math.ceil(health / 20))); // 100 health = 5 hearts, 20 health per heart
+            
+            hearts.forEach((heart, index) => {
+                if (index < heartsToShow) {
+                    heart.classList.remove('lost');
+                } else {
+                    heart.classList.add('lost');
+                }
+            });
+        }
+        
+        function toggleInventoryMenu() {
+            const menu = document.getElementById('inventory-menu');
+            menu.classList.toggle('open');
+            
+            if (menu.classList.contains('open')) {
+                updateInventoryMenuDisplay();
+            }
+        }
+        
+        function updateInventoryMenuDisplay() {
+            const itemsContainer = document.getElementById('inventory-items');
+            
+            if (!controlledSprite || !inventories[controlledSprite] || inventories[controlledSprite].length === 0) {
+                itemsContainer.innerHTML = '<div class="no-items">No items in inventory</div>';
+                return;
+            }
+            
+            itemsContainer.innerHTML = '';
+            
+            inventories[controlledSprite].forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'inventory-item';
+                
+                const isEquipped = equippedItems[controlledSprite] === item;
+                if (isEquipped) {
+                    itemDiv.classList.add('equipped');
+                }
+                
+                const itemName = item.toLowerCase();
+                const damage = weaponDamage[itemName] || 10;
+                
+                itemDiv.innerHTML = `
+                    <div>
+                        <div class="inventory-item-name">${item}</div>
+                        <div class="inventory-item-stats">+${damage} damage</div>
+                    </div>
+                    <div>
+                        <button class="equip-btn ${isEquipped ? 'equipped' : ''}" onclick="toggleEquipItem('${item}')">
+                            ${isEquipped ? 'UNEQUIP' : 'EQUIP'}
+                        </button>
+                        <button class="drop-btn" onclick="dropItem('${item}')">
+                            DROP
+                        </button>
+                    </div>
+                `;
+                
+                itemsContainer.appendChild(itemDiv);
+            });
+        }
+        
+        function dropItem(item) {
+            if (!controlledSprite) return;
+            
+            // Unequip if equipped
+            if (equippedItems[controlledSprite] === item) {
+                delete equippedItems[controlledSprite];
+            }
+            
+            // Remove from inventory
+            const index = inventories[controlledSprite].indexOf(item);
+            if (index > -1) {
+                inventories[controlledSprite].splice(index, 1);
+                log(`🗑️ Dropped ${item}`);
+                playSound('coin');
+                updateInventoryMenuDisplay();
+                
+                // Spawn dropped item in world
+                if (sprites[controlledSprite]) {
+                    const dropName = 'dropped_' + item.replace(/\s+/g, '_') + '_' + Date.now();
+                    createSprite(dropName, sprites[controlledSprite].x + 40, sprites[controlledSprite].y, '📦');
+                }
+            }
+        }
+        
+        function toggleEquipItem(item) {
+            if (!controlledSprite) return;
+            
+            if (equippedItems[controlledSprite] === item) {
+                // Unequip
+                delete equippedItems[controlledSprite];
+                log(`🔓 Unequipped ${item}`);
+                playSound('coin');
+            } else {
+                // Equip
+                equippedItems[controlledSprite] = item;
+                log(`⚔️ Equipped ${item}!`);
+                playSound('coin');
+            }
+            
+            updateInventoryMenuDisplay();
+        }
+        
+        function getEquippedDamage(spriteName) {
+            const equippedItem = equippedItems[spriteName];
+            if (!equippedItem) return 20; // Base damage
+            
+            const itemName = equippedItem.toLowerCase();
+            return weaponDamage[itemName] || 20;
         }
         
         function getRandom(min, max) {
@@ -1580,15 +1974,36 @@ PLAY SOUND "win"`
         
         function clearCanvas() {
             const canvas = document.getElementById('game-canvas');
-            const spritesToRemove = canvas.querySelectorAll('.sprite, .collision-effect');
+            const spritesToRemove = canvas.querySelectorAll('.sprite, .collision-effect, .combat-prompt');
             spritesToRemove.forEach(s => s.remove());
             sprites = {};
             gameState = {};
             inventories = {};
             controlledSprite = null;
-            document.getElementById('health-display').textContent = '❤️ Health: --';
-            document.getElementById('score-display').textContent = '⭐ Score: --';
-            document.getElementById('inventory-display').textContent = '🎒 Inventory: --';
+            combatInProgress = false;
+            treasuresCollected = [];
+            equippedItems = {};
+            enemyCounter = 0;
+            
+            // Stop infinite mode
+            if (infiniteModeEnabled) {
+                infiniteModeEnabled = false;
+                stopInfiniteSpawning();
+                document.getElementById('infinite-mode-btn').style.background = '';
+                document.getElementById('infinite-mode-btn').style.color = '';
+                document.getElementById('infinite-display').classList.remove('active');
+                difficultyLevel = 1;
+            }
+            
+            // Reset displays
+            const hearts = document.querySelectorAll('.heart');
+            hearts.forEach(heart => heart.classList.remove('lost'));
+            document.getElementById('score-display').textContent = '⭐ Score: 0';
+            
+            // Close inventory menu
+            const menu = document.getElementById('inventory-menu');
+            menu.classList.remove('open');
+            
             updateSpriteSelector();
         }
         
@@ -1635,27 +2050,40 @@ PLAY SOUND "win"`
                 // Add keyboard listener
                 if (!keyboardListener) {
                     keyboardListener = function(e) {
-                        if (!keyboardControlEnabled || !controlledSprite) return;
+                        if (!keyboardControlEnabled || !controlledSprite || combatInProgress) return;
                         
                         const moveDistance = 20;
+                        let moved = false;
                         
                         switch(e.key.toLowerCase()) {
                             case 'w':
                                 e.preventDefault();
                                 moveSprite(controlledSprite, 'up', moveDistance);
+                                moved = true;
                                 break;
                             case 's':
                                 e.preventDefault();
                                 moveSprite(controlledSprite, 'down', moveDistance);
+                                moved = true;
                                 break;
                             case 'a':
                                 e.preventDefault();
                                 moveSprite(controlledSprite, 'left', moveDistance);
+                                moved = true;
                                 break;
                             case 'd':
                                 e.preventDefault();
                                 moveSprite(controlledSprite, 'right', moveDistance);
+                                moved = true;
                                 break;
+                        }
+                        
+                        // Check for collisions after moving
+                        if (moved) {
+                            setTimeout(() => {
+                                checkTreasureCollision();
+                                checkCombatCollision();
+                            }, 100);
                         }
                     };
                     document.addEventListener('keydown', keyboardListener);
@@ -1695,6 +2123,369 @@ PLAY SOUND "win"`
             } else {
                 controlledSprite = null;
             }
+        }
+        
+        function toggleInfiniteMode() {
+            infiniteModeEnabled = !infiniteModeEnabled;
+            const btn = document.getElementById('infinite-mode-btn');
+            const display = document.getElementById('infinite-display');
+            
+            if (infiniteModeEnabled) {
+                btn.style.background = '#4ecca3';
+                btn.style.color = '#1a1a2e';
+                display.classList.add('active');
+                
+                // Initialize hero if not exists
+                if (!controlledSprite) {
+                    const heroExists = Object.keys(sprites).some(name => 
+                        name.toLowerCase().includes('hero') || 
+                        name.toLowerCase().includes('player')
+                    );
+                    
+                    if (!heroExists) {
+                        createSprite('hero', 250, 200, '🧙');
+                        gameState['hero'] = { health: 100, score: 0 };
+                        updateDisplay('hero.health', 100);
+                        updateDisplay('hero.score', 0);
+                    }
+                }
+                
+                difficultyLevel = 1;
+                updateDifficultyDisplay();
+                startInfiniteSpawning();
+                log('🌍 Infinite Mode ACTIVATED! Enemies will spawn endlessly and get harder!');
+            } else {
+                btn.style.background = '';
+                btn.style.color = '';
+                display.classList.remove('active');
+                stopInfiniteSpawning();
+                log('🌍 Infinite Mode deactivated');
+            }
+        }
+        
+        function startInfiniteSpawning() {
+            // Spawn enemies every 3-5 seconds (faster as difficulty increases)
+            const spawnDelay = Math.max(2000, 5000 - (difficultyLevel * 200));
+            
+            enemySpawnTimer = setInterval(() => {
+                if (infiniteModeEnabled && !combatInProgress) {
+                    spawnRandomEnemy();
+                }
+            }, spawnDelay);
+            
+            // Spawn treasures every 8-12 seconds
+            treasureSpawnTimer = setInterval(() => {
+                if (infiniteModeEnabled) {
+                    spawnRandomTreasure();
+                }
+            }, 10000);
+            
+            // Increase difficulty every 30 seconds
+            setInterval(() => {
+                if (infiniteModeEnabled && difficultyLevel < 10) {
+                    difficultyLevel++;
+                    updateDifficultyDisplay();
+                    log(`⚠️ Difficulty increased to level ${difficultyLevel}!`, 'warning');
+                    
+                    // Restart spawning with new speed
+                    clearInterval(enemySpawnTimer);
+                    const newSpawnDelay = Math.max(2000, 5000 - (difficultyLevel * 200));
+                    enemySpawnTimer = setInterval(() => {
+                        if (infiniteModeEnabled && !combatInProgress) {
+                            spawnRandomEnemy();
+                        }
+                    }, newSpawnDelay);
+                }
+            }, 30000);
+        }
+        
+        function stopInfiniteSpawning() {
+            if (enemySpawnTimer) {
+                clearInterval(enemySpawnTimer);
+                enemySpawnTimer = null;
+            }
+            if (treasureSpawnTimer) {
+                clearInterval(treasureSpawnTimer);
+                treasureSpawnTimer = null;
+            }
+        }
+        
+        function spawnRandomEnemy() {
+            enemyCounter++;
+            const enemyName = 'enemy_' + enemyCounter;
+            
+            // Choose enemy type based on difficulty
+            const enemyIndex = Math.min(Math.floor(difficultyLevel / 2), enemyTypes.length - 1);
+            const enemyEmoji = enemyTypes[enemyIndex];
+            
+            // Random position at edges of canvas
+            const side = Math.floor(Math.random() * 4);
+            let x, y;
+            
+            switch(side) {
+                case 0: // top
+                    x = Math.random() * 500;
+                    y = 10;
+                    break;
+                case 1: // right
+                    x = 490;
+                    y = Math.random() * 400;
+                    break;
+                case 2: // bottom
+                    x = Math.random() * 500;
+                    y = 390;
+                    break;
+                case 3: // left
+                    x = 10;
+                    y = Math.random() * 400;
+                    break;
+            }
+            
+            createSprite(enemyName, x, y, enemyEmoji);
+            
+            // Set health based on difficulty (50 + 20 per level)
+            const enemyHealth = 50 + (difficultyLevel * 20);
+            gameState[enemyName] = { health: enemyHealth };
+            
+            log(`👹 ${enemyEmoji} spawned! (HP: ${enemyHealth})`);
+        }
+        
+        function spawnRandomTreasure() {
+            const treasureName = 'treasure_' + Date.now();
+            const treasureEmoji = treasureTypes[Math.floor(Math.random() * treasureTypes.length)];
+            
+            const x = 50 + Math.random() * 400;
+            const y = 50 + Math.random() * 300;
+            
+            createSprite(treasureName, x, y, treasureEmoji);
+            log(`✨ Treasure spawned at (${Math.floor(x)}, ${Math.floor(y)})`);
+        }
+        
+        function updateDifficultyDisplay() {
+            document.getElementById('difficulty-level').textContent = difficultyLevel;
+            const percentage = Math.min(100, (difficultyLevel / 10) * 100);
+            document.getElementById('difficulty-fill').style.width = percentage + '%';
+        }
+        
+        function toggleFullscreen() {
+            const canvas = document.getElementById('game-canvas');
+            canvas.classList.toggle('fullscreen');
+            
+            if (canvas.classList.contains('fullscreen')) {
+                log('⛶ Fullscreen mode enabled');
+            } else {
+                log('⛶ Fullscreen mode disabled');
+            }
+        }
+        
+        function checkCombatCollision() {
+            if (!controlledSprite || combatInProgress) return;
+            
+            // Check collision with enemies/heroes
+            for (let spriteName in sprites) {
+                if (spriteName === controlledSprite) continue;
+                
+                const isHeroControlled = controlledSprite.toLowerCase().includes('hero') || 
+                                        controlledSprite.toLowerCase().includes('player') ||
+                                        controlledSprite.toLowerCase().includes('knight');
+                const isEnemyTarget = spriteName.toLowerCase().includes('enemy') || 
+                                     spriteName.toLowerCase().includes('dragon') ||
+                                     spriteName.toLowerCase().includes('monster') ||
+                                     spriteName.toLowerCase().includes('boss') ||
+                                     spriteName.toLowerCase().includes('guard');
+                
+                const isEnemyControlled = controlledSprite.toLowerCase().includes('enemy') || 
+                                         controlledSprite.toLowerCase().includes('dragon') ||
+                                         controlledSprite.toLowerCase().includes('monster') ||
+                                         controlledSprite.toLowerCase().includes('boss') ||
+                                         controlledSprite.toLowerCase().includes('guard');
+                const isHeroTarget = spriteName.toLowerCase().includes('hero') || 
+                                    spriteName.toLowerCase().includes('player') ||
+                                    spriteName.toLowerCase().includes('knight');
+                
+                // Combat collision
+                if ((isHeroControlled && isEnemyTarget) || (isEnemyControlled && isHeroTarget)) {
+                    if (checkCollision(controlledSprite, spriteName)) {
+                        showCombatPrompt(controlledSprite, spriteName);
+                        return;
+                    }
+                }
+            }
+        }
+        
+        function checkTreasureCollision() {
+            if (!controlledSprite) return;
+            
+            // Only heroes can collect treasure
+            const isHero = controlledSprite.toLowerCase().includes('hero') || 
+                          controlledSprite.toLowerCase().includes('player') ||
+                          controlledSprite.toLowerCase().includes('knight');
+            
+            if (!isHero) return;
+            
+            for (let spriteName in sprites) {
+                if (spriteName === controlledSprite) continue;
+                
+                const isTreasure = spriteName.toLowerCase().includes('treasure') || 
+                                  spriteName.toLowerCase().includes('coin') ||
+                                  spriteName.toLowerCase().includes('gem') ||
+                                  spriteName.toLowerCase().includes('gold');
+                
+                if (isTreasure && checkCollision(controlledSprite, spriteName)) {
+                    // Check if already collected
+                    if (treasuresCollected.includes(spriteName)) continue;
+                    
+                    treasuresCollected.push(spriteName);
+                    
+                    // Add score
+                    if (!gameState[controlledSprite]) gameState[controlledSprite] = {};
+                    if (gameState[controlledSprite].score === undefined) {
+                        gameState[controlledSprite].score = 0;
+                    }
+                    
+                    const points = spriteName.toLowerCase().includes('gem') || 
+                                  spriteName.toLowerCase().includes('gold') ? 100 : 10;
+                    
+                    gameState[controlledSprite].score += points;
+                    updateDisplay(controlledSprite + '.score', gameState[controlledSprite].score);
+                    
+                    playSound('coin');
+                    log(`💰 Collected ${spriteName}! +${points} points! Score: ${gameState[controlledSprite].score}`);
+                    
+                    // Visual effect
+                    const effect = document.createElement('div');
+                    effect.className = 'collision-effect';
+                    effect.textContent = '✨';
+                    effect.style.left = sprites[spriteName].x + 'px';
+                    effect.style.top = sprites[spriteName].y + 'px';
+                    effect.style.fontSize = '32px';
+                    effect.style.color = '#ffd700';
+                    document.getElementById('game-canvas').appendChild(effect);
+                    setTimeout(() => effect.remove(), 500);
+                    
+                    // Remove treasure
+                    removeSprite(spriteName);
+                }
+            }
+        }
+        
+        function showCombatPrompt(attacker, target) {
+            combatInProgress = true;
+            
+            const canvas = document.getElementById('game-canvas');
+            const prompt = document.createElement('div');
+            prompt.className = 'combat-prompt';
+            prompt.innerHTML = `
+                <h3>⚔️ BATTLE!</h3>
+                <p style="color: #e8e8e8; margin-bottom: 20px;">
+                    ${attacker} encounters ${target}!
+                </p>
+                <button class="combat-btn" onclick="resolveCombat('${attacker}', '${target}', true)">
+                    ⚔️ ATTACK!
+                </button>
+                <button class="combat-btn defend" onclick="resolveCombat('${attacker}', '${target}', false)">
+                    🛡️ RETREAT
+                </button>
+            `;
+            prompt.id = 'combat-prompt';
+            canvas.appendChild(prompt);
+        }
+        
+        function resolveCombat(attacker, target, didAttack) {
+            const prompt = document.getElementById('combat-prompt');
+            if (prompt) prompt.remove();
+            
+            if (!didAttack) {
+                log(`🛡️ ${attacker} retreats!`);
+                combatInProgress = false;
+                return;
+            }
+            
+            // 50/50 chance
+            const success = Math.random() < 0.5;
+            const damage = getEquippedDamage(attacker);
+            
+            if (success) {
+                // Hit the target
+                playSound('hit');
+                
+                const equippedWeapon = equippedItems[attacker];
+                const weaponText = equippedWeapon ? ` with ${equippedWeapon}` : '';
+                log(`⚔️ ${attacker} hits ${target}${weaponText} for ${damage} damage!`, 'success');
+                
+                if (gameState[target] && gameState[target].health !== undefined) {
+                    gameState[target].health -= damage;
+                    updateDisplay(target + '.health', gameState[target].health);
+                    
+                    if (sprites[target]) {
+                        sprites[target].element.classList.add('damaged');
+                        setTimeout(() => {
+                            if (sprites[target]) {
+                                sprites[target].element.classList.remove('damaged');
+                            }
+                        }, 300);
+                    }
+                    
+                    if (gameState[target].health <= 0) {
+                        log(`💀 ${target} defeated!`, 'warning');
+                        setTimeout(() => removeSprite(target), 500);
+                    }
+                }
+                
+                // Visual effect
+                if (sprites[target]) {
+                    const effect = document.createElement('div');
+                    effect.className = 'collision-effect';
+                    effect.textContent = '💥';
+                    effect.style.left = sprites[target].x + 'px';
+                    effect.style.top = sprites[target].y + 'px';
+                    effect.style.fontSize = '32px';
+                    document.getElementById('game-canvas').appendChild(effect);
+                    setTimeout(() => effect.remove(), 500);
+                }
+            } else {
+                // Miss and take counter damage
+                const counterDamage = getEquippedDamage(target);
+                playSound('hit');
+                log(`💢 ${attacker} missed! ${target} counters for ${counterDamage} damage!`, 'error');
+                
+                if (gameState[attacker] && gameState[attacker].health !== undefined) {
+                    gameState[attacker].health -= counterDamage;
+                    updateDisplay(attacker + '.health', gameState[attacker].health);
+                    
+                    if (sprites[attacker]) {
+                        sprites[attacker].element.classList.add('damaged');
+                        setTimeout(() => {
+                            if (sprites[attacker]) {
+                                sprites[attacker].element.classList.remove('damaged');
+                            }
+                        }, 300);
+                    }
+                    
+                    if (gameState[attacker].health <= 0) {
+                        log(`💀 ${attacker} defeated!`, 'warning');
+                        setTimeout(() => {
+                            removeSprite(attacker);
+                            controlledSprite = null;
+                            updateSpriteSelector();
+                        }, 500);
+                    }
+                }
+                
+                // Visual effect
+                if (sprites[attacker]) {
+                    const effect = document.createElement('div');
+                    effect.className = 'collision-effect';
+                    effect.textContent = '💥';
+                    effect.style.left = sprites[attacker].x + 'px';
+                    effect.style.top = sprites[attacker].y + 'px';
+                    effect.style.fontSize = '32px';
+                    document.getElementById('game-canvas').appendChild(effect);
+                    setTimeout(() => effect.remove(), 500);
+                }
+            }
+            
+            combatInProgress = false;
         }
     </script>
 </body>
