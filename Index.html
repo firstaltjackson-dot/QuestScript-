@@ -31,6 +31,15 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
             border: 2px solid #4ecca3;
+            position: relative;
+        }
+        
+        .sale-header {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 14px;
+            font-weight: bold;
         }
         
         h1 {
@@ -304,8 +313,8 @@
         
         .footer {
             text-align: center;
-            margin-top: 30px;
-            padding: 20px;
+            margin-top: 20px;
+            padding: 15px;
             font-size: 12px;
         }
         
@@ -326,7 +335,6 @@
             letter-spacing: 2px;
             animation: rainbow-shift 3s linear infinite;
             background-size: 200% 100%;
-            margin-bottom: 10px;
         }
         
         @keyframes rainbow-shift {
@@ -334,10 +342,39 @@
             100% { background-position: 200% 50%; }
         }
         
+        .keyboard-control-panel {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid #ffd700;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        
+        .control-info {
+            color: #ffd700;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        
+        .sprite-selector {
+            background: #0f0f23;
+            color: #4ecca3;
+            border: 2px solid #4ecca3;
+            padding: 8px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 5px;
+        }
+        
+        .controlled-sprite {
+            box-shadow: 0 0 20px #ffd700;
+            border: 2px solid #ffd700;
+            border-radius: 50%;
+        }
+        
         .sale-price {
             font-size: 14px;
             font-weight: bold;
-            margin-top: 10px;
         }
         
         .original-price {
@@ -362,11 +399,68 @@
             margin-right: 5px;
             animation: pulse 2s infinite;
         }
+        
+        /* Custom Scrollbars */
+        #code-editor::-webkit-scrollbar,
+        #output::-webkit-scrollbar,
+        .syntax-guide::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+        
+        #code-editor::-webkit-scrollbar-track,
+        #output::-webkit-scrollbar-track,
+        .syntax-guide::-webkit-scrollbar-track {
+            background: #0a0a15;
+            border-radius: 10px;
+            border: 1px solid rgba(78, 204, 163, 0.2);
+        }
+        
+        #code-editor::-webkit-scrollbar-thumb,
+        #output::-webkit-scrollbar-thumb,
+        .syntax-guide::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #4ecca3 0%, #45b393 100%);
+            border-radius: 10px;
+            border: 2px solid #0a0a15;
+            transition: all 0.3s;
+        }
+        
+        #code-editor::-webkit-scrollbar-thumb:hover,
+        #output::-webkit-scrollbar-thumb:hover,
+        .syntax-guide::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #5efcb3 0%, #4ecca3 100%);
+            box-shadow: 0 0 10px rgba(78, 204, 163, 0.6);
+        }
+        
+        #code-editor::-webkit-scrollbar-thumb:active,
+        #output::-webkit-scrollbar-thumb:active,
+        .syntax-guide::-webkit-scrollbar-thumb:active {
+            background: linear-gradient(180deg, #3edc93 0%, #35a383 100%);
+        }
+        
+        #code-editor::-webkit-scrollbar-corner,
+        #output::-webkit-scrollbar-corner,
+        .syntax-guide::-webkit-scrollbar-corner {
+            background: #0a0a15;
+        }
+        
+        /* Firefox scrollbar styling */
+        #code-editor,
+        #output,
+        .syntax-guide {
+            scrollbar-width: thin;
+            scrollbar-color: #4ecca3 #0a0a15;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
+            <div class="sale-header">
+                <span class="sale-badge">SALE</span>
+                <span class="original-price">$4.99</span>
+                <span class="sale-price-now">$0.00</span>
+            </div>
             <h1>⚔️ QuestScript <span class="pro-badge">PRO - FREE!</span></h1>
             <p class="subtitle">Enhanced Gaming Programming Language - All Premium Features Unlocked!</p>
         </header>
@@ -484,6 +578,19 @@ SAY "Quest complete! Score: " + hero.score FOR 2000</textarea>
                         <code>PLAY SOUND "type"</code> (hit/coin/win/lose)
                     </div>
                 </div>
+                
+                <div class="keyboard-control-panel">
+                    <h3 style="color: #ffd700; margin-bottom: 10px;">🎮 PRO: Keyboard Control (FREE!)</h3>
+                    <button onclick="toggleKeyboardControl()" class="secondary-btn" id="keyboard-toggle-btn">
+                        🎹 Enable WASD Control
+                    </button>
+                    <select id="sprite-selector" class="sprite-selector" onchange="updateControlledSprite()">
+                        <option value="">Select sprite to control...</option>
+                    </select>
+                    <div class="control-info" id="control-info">
+                        Press W/A/S/D to move • Speed: 20px per key
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -498,11 +605,6 @@ SAY "Quest complete! Score: " + hero.score FOR 2000</textarea>
         
         <div class="footer">
             <div class="footer-brand">V4N1TY LCD           LONDON           .</div>
-            <div class="sale-price">
-                <span class="sale-badge">SALE</span>
-                <span class="original-price">$4.99</span>
-                <span class="sale-price-now">$0.00</span>
-            </div>
         </div>
     </div>
     
@@ -512,6 +614,9 @@ SAY "Quest complete! Score: " + hero.score FOR 2000</textarea>
         let isRunning = false;
         let soundEnabled = true;
         let inventories = {};
+        let keyboardControlEnabled = false;
+        let controlledSprite = null;
+        let keyboardListener = null;
         
         const examples = {
             rpg: `// Full RPG Battle with PRO features
@@ -888,6 +993,9 @@ PLAY SOUND "win"`
             };
             
             gameState[name] = { x, y };
+            
+            // Update sprite selector
+            updateSpriteSelector();
         }
         
         function moveSprite(name, direction, distance) {
@@ -959,6 +1067,13 @@ PLAY SOUND "win"`
                 sprites[name].element.remove();
                 delete sprites[name];
                 delete gameState[name];
+                
+                // If this was the controlled sprite, clear it
+                if (controlledSprite === name) {
+                    controlledSprite = null;
+                }
+                
+                updateSpriteSelector();
             }
         }
         
@@ -1470,9 +1585,11 @@ PLAY SOUND "win"`
             sprites = {};
             gameState = {};
             inventories = {};
+            controlledSprite = null;
             document.getElementById('health-display').textContent = '❤️ Health: --';
             document.getElementById('score-display').textContent = '⭐ Score: --';
             document.getElementById('inventory-display').textContent = '🎒 Inventory: --';
+            updateSpriteSelector();
         }
         
         function loadExample(exampleName) {
@@ -1483,6 +1600,100 @@ PLAY SOUND "win"`
                 }, 100);
             } else {
                 document.getElementById('code-editor').value = examples[exampleName];
+            }
+        }
+        
+        function updateSpriteSelector() {
+            const selector = document.getElementById('sprite-selector');
+            const currentValue = selector.value;
+            
+            selector.innerHTML = '<option value="">Select sprite to control...</option>';
+            
+            Object.keys(sprites).forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = `${name} ${sprites[name].emoji}`;
+                selector.appendChild(option);
+            });
+            
+            if (currentValue && sprites[currentValue]) {
+                selector.value = currentValue;
+            }
+        }
+        
+        function toggleKeyboardControl() {
+            keyboardControlEnabled = !keyboardControlEnabled;
+            const btn = document.getElementById('keyboard-toggle-btn');
+            const info = document.getElementById('control-info');
+            
+            if (keyboardControlEnabled) {
+                btn.textContent = '🎹 Disable WASD Control';
+                btn.style.background = '#ff6b6b';
+                info.style.color = '#4ecca3';
+                info.textContent = '✓ Keyboard control ACTIVE! Select a sprite and use W/A/S/D';
+                
+                // Add keyboard listener
+                if (!keyboardListener) {
+                    keyboardListener = function(e) {
+                        if (!keyboardControlEnabled || !controlledSprite) return;
+                        
+                        const moveDistance = 20;
+                        
+                        switch(e.key.toLowerCase()) {
+                            case 'w':
+                                e.preventDefault();
+                                moveSprite(controlledSprite, 'up', moveDistance);
+                                break;
+                            case 's':
+                                e.preventDefault();
+                                moveSprite(controlledSprite, 'down', moveDistance);
+                                break;
+                            case 'a':
+                                e.preventDefault();
+                                moveSprite(controlledSprite, 'left', moveDistance);
+                                break;
+                            case 'd':
+                                e.preventDefault();
+                                moveSprite(controlledSprite, 'right', moveDistance);
+                                break;
+                        }
+                    };
+                    document.addEventListener('keydown', keyboardListener);
+                }
+                
+                log('🎮 Keyboard control enabled! Select a sprite to control.');
+            } else {
+                btn.textContent = '🎹 Enable WASD Control';
+                btn.style.background = '';
+                info.style.color = '#ffd700';
+                info.textContent = 'Press W/A/S/D to move • Speed: 20px per key';
+                
+                // Remove highlight from controlled sprite
+                if (controlledSprite && sprites[controlledSprite]) {
+                    sprites[controlledSprite].element.classList.remove('controlled-sprite');
+                }
+                controlledSprite = null;
+                
+                log('🎮 Keyboard control disabled.');
+            }
+        }
+        
+        function updateControlledSprite() {
+            const selector = document.getElementById('sprite-selector');
+            const newSprite = selector.value;
+            
+            // Remove highlight from old sprite
+            if (controlledSprite && sprites[controlledSprite]) {
+                sprites[controlledSprite].element.classList.remove('controlled-sprite');
+            }
+            
+            // Set new controlled sprite
+            if (newSprite && sprites[newSprite]) {
+                controlledSprite = newSprite;
+                sprites[controlledSprite].element.classList.add('controlled-sprite');
+                log(`🎮 Now controlling: ${controlledSprite} ${sprites[controlledSprite].emoji}`);
+            } else {
+                controlledSprite = null;
             }
         }
     </script>
