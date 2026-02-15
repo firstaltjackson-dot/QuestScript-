@@ -490,6 +490,194 @@
             display: block;
         }
         
+        .zone-display {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #ffd700;
+            display: none;
+            text-align: right;
+        }
+        
+        .zone-display.active {
+            display: block;
+        }
+        
+        .zone-name {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .zone-progress {
+            font-size: 11px;
+            color: #4ecca3;
+        }
+        
+        .card-selection-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .card-selection-overlay.active {
+            display: flex;
+        }
+        
+        .card-selection-container {
+            text-align: center;
+        }
+        
+        .card-selection-title {
+            color: #ffd700;
+            font-size: 32px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        
+        .card-selection-subtitle {
+            color: #4ecca3;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+        
+        .cards-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+        }
+        
+        .card {
+            width: 200px;
+            height: 280px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 3px solid #4ecca3;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(78, 204, 163, 0.6);
+            border-color: #ffd700;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(78, 204, 163, 0.1),
+                transparent
+            );
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+        
+        .card:hover::before {
+            left: 100%;
+        }
+        
+        .card-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .card-name {
+            color: #ffd700;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .card-description {
+            color: #e8e8e8;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .card-effect {
+            color: #4ecca3;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .boss-warning {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 0, 0, 0.95);
+            border: 5px solid #ffd700;
+            padding: 40px;
+            border-radius: 20px;
+            z-index: 9999;
+            text-align: center;
+            animation: boss-pulse 1s infinite;
+        }
+        
+        @keyframes boss-pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+        }
+        
+        .boss-warning h2 {
+            color: #ffd700;
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        }
+        
+        .boss-warning p {
+            color: white;
+            font-size: 24px;
+        }
+        
+        .active-buffs {
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            max-width: 200px;
+            display: none;
+        }
+        
+        .active-buffs.visible {
+            display: block;
+        }
+        
+        .buff-item {
+            color: #4ecca3;
+            margin: 3px 0;
+            padding: 3px;
+            border-left: 2px solid #4ecca3;
+            padding-left: 5px;
+        }
+        
         .difficulty-bar {
             width: 100px;
             height: 8px;
@@ -772,6 +960,14 @@ SAY "Quest complete! Score: " + hero.score FOR 2000</textarea>
                             <div class="difficulty-fill" id="difficulty-fill" style="width: 10%"></div>
                         </div>
                     </div>
+                    <div class="zone-display" id="zone-display">
+                        <div class="zone-name" id="zone-name">Zone 1: Plains</div>
+                        <div class="zone-progress" id="zone-progress">0/100 to next zone</div>
+                    </div>
+                    <div class="active-buffs" id="active-buffs">
+                        <strong style="color: #ffd700;">🎴 Active Cards:</strong>
+                        <div id="buffs-list"></div>
+                    </div>
                     <div class="inventory-display" id="inventory-display" onclick="toggleInventoryMenu()">
                         🎒 Inventory (Click)
                     </div>
@@ -779,6 +975,17 @@ SAY "Quest complete! Score: " + hero.score FOR 2000</textarea>
                         <h3>⚔️ Equipment</h3>
                         <div id="inventory-items">
                             <div class="no-items">No items in inventory</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card Selection Overlay -->
+                <div class="card-selection-overlay" id="card-overlay">
+                    <div class="card-selection-container">
+                        <h1 class="card-selection-title" id="card-title">🎴 Choose Your Card!</h1>
+                        <p class="card-selection-subtitle" id="card-subtitle">Select 1 card to gain its power</p>
+                        <div class="cards-container" id="cards-container">
+                            <!-- Cards will be generated here -->
                         </div>
                     </div>
                 </div>
@@ -873,9 +1080,60 @@ SAY "Quest complete! Score: " + hero.score FOR 2000</textarea>
         let treasureSpawnTimer = null;
         let enemyCounter = 0;
         
+        // Zone system
+        let currentZone = 1;
+        let nextZoneScore = 100;
+        let lastBossScore = 0;
+        let nextBossScore = 1000;
+        
+        // Card system
+        let activeCards = [];
+        let pendingCardSelection = false;
+        
+        // Player buffs from cards
+        let playerBuffs = {
+            damageBonus: 0,
+            moveSpeed: 20,
+            scoreMultiplier: 1,
+            damageReduction: 0,
+            maxHealthBonus: 0,
+            doubleStrikeChance: 0,
+            lifesteal: 0,
+            criticalChance: 0
+        };
+        
+        // Zone definitions
+        const zones = [
+            { name: 'Plains', color: '#4ecca3', emoji: '🌱' },
+            { name: 'Dark Forest', color: '#45b393', emoji: '🌲' },
+            { name: 'Mountains', color: '#808080', emoji: '⛰️' },
+            { name: 'Volcano', color: '#ff6b6b', emoji: '🌋' },
+            { name: 'Ice Realm', color: '#6bb6ff', emoji: '❄️' },
+            { name: 'Shadow Realm', color: '#9400d3', emoji: '🌑' },
+            { name: 'Heaven Gates', color: '#ffd700', emoji: '☁️' },
+            { name: 'Underworld', color: '#ff0000', emoji: '🔥' }
+        ];
+        
+        // Card pool
+        const cardPool = [
+            { name: "Warrior's Strength", icon: "⚔️", description: "Your attacks become more powerful", effect: "damageBonus", value: 10, effectText: "+10 Damage" },
+            { name: "Healing Touch", icon: "❤️", description: "Restore your vitality instantly", effect: "heal", value: 40, effectText: "Restore 2 Hearts" },
+            { name: "Swift Foot", icon: "👟", description: "Move faster across the battlefield", effect: "moveSpeed", value: 10, effectText: "+10 Movement Speed" },
+            { name: "Lucky Charm", icon: "🍀", description: "Find more valuable treasures", effect: "scoreMultiplier", value: 0.5, effectText: "+50% Score" },
+            { name: "Iron Will", icon: "🛡️", description: "Increase your maximum health", effect: "maxHealth", value: 1, effectText: "+1 Max Heart" },
+            { name: "Double Strike", icon: "⚡", description: "Chance to attack twice", effect: "doubleStrike", value: 25, effectText: "25% Double Attack" },
+            { name: "Stone Skin", icon: "🗿", description: "Reduce damage taken", effect: "damageReduction", value: 5, effectText: "-5 Damage Taken" },
+            { name: "Treasure Hunter", icon: "💰", description: "Double treasure score", effect: "scoreMultiplier", value: 1, effectText: "2x Treasure Score" },
+            { name: "Berserker", icon: "😡", description: "Massive damage boost", effect: "damageBonus", value: 20, effectText: "+20 Damage" },
+            { name: "Life Steal", icon: "🩸", description: "Heal when you damage", effect: "lifesteal", value: 10, effectText: "Heal 10 HP/hit" },
+            { name: "Critical Strike", icon: "💥", description: "Devastating attacks", effect: "critical", value: 20, effectText: "20% Crit (2x)" },
+            { name: "Phoenix Heart", icon: "🔥", description: "Rise stronger", effect: "maxHealth", value: 2, effectText: "+2 Max Hearts" }
+        ];
+        
         // Enemy types that get progressively harder
         const enemyTypes = ['👾', '👻', '💀', '👹', '🐉', '🧟', '🧛'];
         const treasureTypes = ['🪙', '💎', '👑', '💰'];
+        const bossTypes = ['🐲', '👿', '💀', '🧙‍♂️', '👑', '🦹‍♂️'];
         
         // Weapon damage values
         const weaponDamage = {
@@ -1591,10 +1849,19 @@ PLAY SOUND "win"`
         
         function getEquippedDamage(spriteName) {
             const equippedItem = equippedItems[spriteName];
-            if (!equippedItem) return 20; // Base damage
+            let baseDamage = 20;
             
-            const itemName = equippedItem.toLowerCase();
-            return weaponDamage[itemName] || 20;
+            if (equippedItem) {
+                const itemName = equippedItem.toLowerCase();
+                baseDamage = weaponDamage[itemName] || 20;
+            }
+            
+            // Add damage bonus from cards (only for player)
+            if (spriteName === controlledSprite) {
+                baseDamage += playerBuffs.damageBonus;
+            }
+            
+            return baseDamage;
         }
         
         function getRandom(min, max) {
@@ -1974,7 +2241,7 @@ PLAY SOUND "win"`
         
         function clearCanvas() {
             const canvas = document.getElementById('game-canvas');
-            const spritesToRemove = canvas.querySelectorAll('.sprite, .collision-effect, .combat-prompt');
+            const spritesToRemove = canvas.querySelectorAll('.sprite, .collision-effect, .combat-prompt, .boss-warning');
             spritesToRemove.forEach(s => s.remove());
             sprites = {};
             gameState = {};
@@ -1985,6 +2252,26 @@ PLAY SOUND "win"`
             equippedItems = {};
             enemyCounter = 0;
             
+            // Reset zone and card systems
+            currentZone = 1;
+            nextZoneScore = 100;
+            lastBossScore = 0;
+            nextBossScore = 1000;
+            activeCards = [];
+            pendingCardSelection = false;
+            
+            // Reset player buffs
+            playerBuffs = {
+                damageBonus: 0,
+                moveSpeed: 20,
+                scoreMultiplier: 1,
+                damageReduction: 0,
+                maxHealthBonus: 0,
+                doubleStrikeChance: 0,
+                lifesteal: 0,
+                criticalChance: 0
+            };
+            
             // Stop infinite mode
             if (infiniteModeEnabled) {
                 infiniteModeEnabled = false;
@@ -1992,12 +2279,25 @@ PLAY SOUND "win"`
                 document.getElementById('infinite-mode-btn').style.background = '';
                 document.getElementById('infinite-mode-btn').style.color = '';
                 document.getElementById('infinite-display').classList.remove('active');
+                document.getElementById('zone-display').classList.remove('active');
+                document.getElementById('active-buffs').classList.remove('visible');
                 difficultyLevel = 1;
             }
             
-            // Reset displays
-            const hearts = document.querySelectorAll('.heart');
-            hearts.forEach(heart => heart.classList.remove('lost'));
+            // Close card overlay if open
+            document.getElementById('card-overlay').classList.remove('active');
+            
+            // Reset displays - remove extra hearts first
+            const healthBar = document.querySelector('.health-bar');
+            const hearts = healthBar.querySelectorAll('.heart');
+            hearts.forEach((heart, index) => {
+                if (index >= 5) {
+                    heart.remove(); // Remove bonus hearts
+                } else {
+                    heart.classList.remove('lost'); // Reset base hearts
+                }
+            });
+            
             document.getElementById('score-display').textContent = '⭐ Score: 0';
             
             // Close inventory menu
@@ -2052,7 +2352,7 @@ PLAY SOUND "win"`
                     keyboardListener = function(e) {
                         if (!keyboardControlEnabled || !controlledSprite || combatInProgress) return;
                         
-                        const moveDistance = 20;
+                        const moveDistance = playerBuffs.moveSpeed;
                         let moved = false;
                         
                         switch(e.key.toLowerCase()) {
@@ -2129,11 +2429,13 @@ PLAY SOUND "win"`
             infiniteModeEnabled = !infiniteModeEnabled;
             const btn = document.getElementById('infinite-mode-btn');
             const display = document.getElementById('infinite-display');
+            const zoneDisplay = document.getElementById('zone-display');
             
             if (infiniteModeEnabled) {
                 btn.style.background = '#4ecca3';
                 btn.style.color = '#1a1a2e';
                 display.classList.add('active');
+                zoneDisplay.classList.add('active');
                 
                 // Initialize hero if not exists
                 if (!controlledSprite) {
@@ -2150,17 +2452,241 @@ PLAY SOUND "win"`
                     }
                 }
                 
+                // Reset zone and show initial card selection
+                currentZone = 1;
+                nextZoneScore = 100;
+                nextBossScore = 1000;
+                updateZoneDisplay();
+                
                 difficultyLevel = 1;
                 updateDifficultyDisplay();
                 startInfiniteSpawning();
-                log('🌍 Infinite Mode ACTIVATED! Enemies will spawn endlessly and get harder!');
+                
+                // Show card selection for starting cards
+                showCardSelection("🎴 Choose Your Starting Card!", "Select 1 card to begin your journey");
+                
+                log('🌍 Infinite Mode ACTIVATED! Choose your starting card!');
             } else {
                 btn.style.background = '';
                 btn.style.color = '';
                 display.classList.remove('active');
+                zoneDisplay.classList.remove('active');
                 stopInfiniteSpawning();
                 log('🌍 Infinite Mode deactivated');
             }
+        }
+        
+        function showCardSelection(title, subtitle) {
+            if (pendingCardSelection) return;
+            
+            pendingCardSelection = true;
+            combatInProgress = true; // Pause game during selection
+            
+            const overlay = document.getElementById('card-overlay');
+            document.getElementById('card-title').textContent = title;
+            document.getElementById('card-subtitle').textContent = subtitle;
+            
+            // Generate 3 random cards
+            const cardsContainer = document.getElementById('cards-container');
+            cardsContainer.innerHTML = '';
+            
+            const shuffled = [...cardPool].sort(() => Math.random() - 0.5);
+            const selectedCards = shuffled.slice(0, 3);
+            
+            selectedCards.forEach(card => {
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'card';
+                cardDiv.innerHTML = `
+                    <div class="card-icon">${card.icon}</div>
+                    <div class="card-name">${card.name}</div>
+                    <div class="card-description">${card.description}</div>
+                    <div class="card-effect">${card.effectText}</div>
+                `;
+                cardDiv.onclick = () => selectCard(card);
+                cardsContainer.appendChild(cardDiv);
+            });
+            
+            overlay.classList.add('active');
+            playSound('coin');
+        }
+        
+        function selectCard(card) {
+            const overlay = document.getElementById('card-overlay');
+            overlay.classList.remove('active');
+            
+            // Apply card effect
+            applyCardEffect(card);
+            
+            // Add to active cards
+            activeCards.push(card);
+            updateActiveBuffsDisplay();
+            
+            pendingCardSelection = false;
+            combatInProgress = false;
+            
+            playSound('win');
+            log(`🎴 Selected: ${card.name} - ${card.effectText}`);
+        }
+        
+        function applyCardEffect(card) {
+            if (!controlledSprite) return;
+            
+            switch(card.effect) {
+                case 'damageBonus':
+                    playerBuffs.damageBonus += card.value;
+                    break;
+                case 'heal':
+                    if (gameState[controlledSprite]) {
+                        gameState[controlledSprite].health = Math.min(
+                            gameState[controlledSprite].health + card.value,
+                            (maxHealth + playerBuffs.maxHealthBonus) * 20
+                        );
+                        updateDisplay(controlledSprite + '.health', gameState[controlledSprite].health);
+                    }
+                    break;
+                case 'moveSpeed':
+                    playerBuffs.moveSpeed += card.value;
+                    break;
+                case 'scoreMultiplier':
+                    playerBuffs.scoreMultiplier += card.value;
+                    break;
+                case 'maxHealth':
+                    playerBuffs.maxHealthBonus += card.value;
+                    // Add hearts to display
+                    const healthBar = document.querySelector('.health-bar');
+                    for (let i = 0; i < card.value; i++) {
+                        const heart = document.createElement('span');
+                        heart.className = 'heart';
+                        heart.textContent = '❤️';
+                        healthBar.appendChild(heart);
+                    }
+                    // Heal to new max
+                    if (gameState[controlledSprite]) {
+                        gameState[controlledSprite].health = Math.min(
+                            gameState[controlledSprite].health + (card.value * 20),
+                            (maxHealth + playerBuffs.maxHealthBonus) * 20
+                        );
+                        updateDisplay(controlledSprite + '.health', gameState[controlledSprite].health);
+                    }
+                    break;
+                case 'doubleStrike':
+                    playerBuffs.doubleStrikeChance += card.value;
+                    break;
+                case 'damageReduction':
+                    playerBuffs.damageReduction += card.value;
+                    break;
+                case 'lifesteal':
+                    playerBuffs.lifesteal += card.value;
+                    break;
+                case 'critical':
+                    playerBuffs.criticalChance += card.value;
+                    break;
+            }
+        }
+        
+        function updateActiveBuffsDisplay() {
+            const buffsList = document.getElementById('buffs-list');
+            const buffsContainer = document.getElementById('active-buffs');
+            
+            if (activeCards.length === 0) {
+                buffsContainer.classList.remove('visible');
+                return;
+            }
+            
+            buffsContainer.classList.add('visible');
+            buffsList.innerHTML = '';
+            
+            activeCards.forEach(card => {
+                const buffDiv = document.createElement('div');
+                buffDiv.className = 'buff-item';
+                buffDiv.textContent = `${card.icon} ${card.name}`;
+                buffsList.appendChild(buffDiv);
+            });
+        }
+        
+        function updateZoneDisplay() {
+            const zone = zones[Math.min(currentZone - 1, zones.length - 1)];
+            document.getElementById('zone-name').innerHTML = `${zone.emoji} Zone ${currentZone}: ${zone.name}`;
+            
+            if (controlledSprite && gameState[controlledSprite]) {
+                const currentScore = gameState[controlledSprite].score || 0;
+                const remaining = Math.max(0, nextZoneScore - currentScore);
+                document.getElementById('zone-progress').textContent = `${currentScore}/${nextZoneScore} to next zone`;
+            }
+        }
+        
+        function checkZoneProgression() {
+            if (!controlledSprite || !gameState[controlledSprite]) return;
+            
+            const currentScore = gameState[controlledSprite].score || 0;
+            
+            // Check for zone progression
+            if (currentScore >= nextZoneScore && !pendingCardSelection) {
+                currentZone++;
+                nextZoneScore += 100; // Each zone needs 100 more points
+                
+                playSound('win');
+                log(`🌟 ZONE UP! Entered Zone ${currentZone}!`, 'warning');
+                
+                updateZoneDisplay();
+                
+                // Show card selection for new zone
+                const zone = zones[Math.min(currentZone - 1, zones.length - 1)];
+                showCardSelection(
+                    `${zone.emoji} Entered ${zone.name}!`,
+                    "Choose a card to power up!"
+                );
+            }
+            
+            // Check for boss battle
+            if (currentScore >= nextBossScore && currentScore > lastBossScore && !pendingCardSelection) {
+                lastBossScore = currentScore;
+                nextBossScore = currentScore + 500; // Next boss in 500 points
+                
+                spawnBoss();
+            }
+        }
+        
+        function spawnBoss() {
+            combatInProgress = true;
+            
+            // Show boss warning
+            const canvas = document.getElementById('game-canvas');
+            const warning = document.createElement('div');
+            warning.className = 'boss-warning';
+            warning.innerHTML = `
+                <h2>⚠️ BOSS APPROACHING! ⚠️</h2>
+                <p>A powerful foe emerges!</p>
+            `;
+            canvas.appendChild(warning);
+            
+            playSound('start');
+            
+            setTimeout(() => {
+                warning.remove();
+                
+                // Spawn the boss
+                const bossName = 'BOSS_' + Date.now();
+                const bossEmoji = bossTypes[Math.floor(Math.random() * bossTypes.length)];
+                const bossHealth = 200 + (currentZone * 50); // Scales with zones
+                
+                // Random edge spawn
+                const side = Math.floor(Math.random() * 4);
+                let x, y;
+                switch(side) {
+                    case 0: x = 250; y = 10; break;
+                    case 1: x = 460; y = 200; break;
+                    case 2: x = 250; y = 360; break;
+                    case 3: x = 10; y = 200; break;
+                }
+                
+                createSprite(bossName, x, y, bossEmoji);
+                gameState[bossName] = { health: bossHealth, isBoss: true };
+                
+                log(`👑 BOSS SPAWNED: ${bossEmoji} (HP: ${bossHealth})!`, 'warning');
+                
+                combatInProgress = false;
+            }, 3000);
         }
         
         function startInfiniteSpawning() {
@@ -2218,26 +2744,26 @@ PLAY SOUND "win"`
             const enemyIndex = Math.min(Math.floor(difficultyLevel / 2), enemyTypes.length - 1);
             const enemyEmoji = enemyTypes[enemyIndex];
             
-            // Random position at edges of canvas
+            // Random position at edges of canvas, avoiding UI
             const side = Math.floor(Math.random() * 4);
             let x, y;
             
             switch(side) {
-                case 0: // top
-                    x = Math.random() * 500;
+                case 0: // top - avoid left UI area
+                    x = 220 + Math.random() * 280; // Start after UI on left
                     y = 10;
                     break;
                 case 1: // right
-                    x = 490;
+                    x = 460;
                     y = Math.random() * 400;
                     break;
-                case 2: // bottom
-                    x = Math.random() * 500;
-                    y = 390;
+                case 2: // bottom - avoid left UI area
+                    x = 220 + Math.random() * 280;
+                    y = 360;
                     break;
-                case 3: // left
+                case 3: // left - spawn in middle/bottom areas only to avoid top UI
                     x = 10;
-                    y = Math.random() * 400;
+                    y = 140 + Math.random() * 220; // Start below UI elements
                     break;
             }
             
@@ -2254,8 +2780,25 @@ PLAY SOUND "win"`
             const treasureName = 'treasure_' + Date.now();
             const treasureEmoji = treasureTypes[Math.floor(Math.random() * treasureTypes.length)];
             
-            const x = 50 + Math.random() * 400;
-            const y = 50 + Math.random() * 300;
+            // Avoid UI areas when spawning
+            // Top-left has health/score (0-220px wide, 0-120px tall)
+            // Bottom-left has inventory (0-220px wide, 320-400px tall)
+            
+            let x, y;
+            let validPosition = false;
+            
+            while (!validPosition) {
+                x = 50 + Math.random() * 400;
+                y = 50 + Math.random() * 300;
+                
+                // Check if position overlaps with UI
+                const inTopLeftUI = (x < 220 && y < 120);
+                const inBottomLeftUI = (x < 220 && y > 280);
+                
+                if (!inTopLeftUI && !inBottomLeftUI) {
+                    validPosition = true;
+                }
+            }
             
             createSprite(treasureName, x, y, treasureEmoji);
             log(`✨ Treasure spawned at (${Math.floor(x)}, ${Math.floor(y)})`);
@@ -2337,17 +2880,24 @@ PLAY SOUND "win"`
                     
                     treasuresCollected.push(spriteName);
                     
-                    // Add score
+                    // Add score with multiplier
                     if (!gameState[controlledSprite]) gameState[controlledSprite] = {};
                     if (gameState[controlledSprite].score === undefined) {
                         gameState[controlledSprite].score = 0;
                     }
                     
-                    const points = spriteName.toLowerCase().includes('gem') || 
-                                  spriteName.toLowerCase().includes('gold') ? 100 : 10;
+                    let basePoints = spriteName.toLowerCase().includes('gem') || 
+                                    spriteName.toLowerCase().includes('gold') ? 100 : 10;
+                    
+                    // Apply score multiplier from cards
+                    const points = Math.floor(basePoints * (1 + playerBuffs.scoreMultiplier));
                     
                     gameState[controlledSprite].score += points;
                     updateDisplay(controlledSprite + '.score', gameState[controlledSprite].score);
+                    
+                    // Check for zone progression
+                    checkZoneProgression();
+                    updateZoneDisplay();
                     
                     playSound('coin');
                     log(`💰 Collected ${spriteName}! +${points} points! Score: ${gameState[controlledSprite].score}`);
@@ -2403,19 +2953,40 @@ PLAY SOUND "win"`
             
             // 50/50 chance
             const success = Math.random() < 0.5;
-            const damage = getEquippedDamage(attacker);
+            let damage = getEquippedDamage(attacker);
             
             if (success) {
+                // Check for critical strike (player only)
+                let isCrit = false;
+                if (attacker === controlledSprite && Math.random() * 100 < playerBuffs.criticalChance) {
+                    damage *= 2;
+                    isCrit = true;
+                }
+                
                 // Hit the target
                 playSound('hit');
                 
                 const equippedWeapon = equippedItems[attacker];
                 const weaponText = equippedWeapon ? ` with ${equippedWeapon}` : '';
-                log(`⚔️ ${attacker} hits ${target}${weaponText} for ${damage} damage!`, 'success');
+                const critText = isCrit ? ' 💥 CRITICAL!' : '';
+                log(`⚔️ ${attacker} hits ${target}${weaponText} for ${damage} damage!${critText}`, 'success');
                 
                 if (gameState[target] && gameState[target].health !== undefined) {
                     gameState[target].health -= damage;
                     updateDisplay(target + '.health', gameState[target].health);
+                    
+                    // Lifesteal (player only)
+                    if (attacker === controlledSprite && playerBuffs.lifesteal > 0) {
+                        if (gameState[attacker]) {
+                            const maxHP = (maxHealth + playerBuffs.maxHealthBonus) * 20;
+                            gameState[attacker].health = Math.min(
+                                gameState[attacker].health + playerBuffs.lifesteal,
+                                maxHP
+                            );
+                            updateDisplay(attacker + '.health', gameState[attacker].health);
+                            log(`🩸 Lifesteal! +${playerBuffs.lifesteal} HP`);
+                        }
+                    }
                     
                     if (sprites[target]) {
                         sprites[target].element.classList.add('damaged');
@@ -2427,6 +2998,15 @@ PLAY SOUND "win"`
                     }
                     
                     if (gameState[target].health <= 0) {
+                        // Bonus score for killing bosses
+                        if (gameState[target].isBoss && attacker === controlledSprite) {
+                            gameState[attacker].score = (gameState[attacker].score || 0) + 200;
+                            updateDisplay(attacker + '.score', gameState[attacker].score);
+                            log(`👑 BOSS DEFEATED! +200 BONUS POINTS!`, 'warning');
+                            checkZoneProgression();
+                            updateZoneDisplay();
+                        }
+                        
                         log(`💀 ${target} defeated!`, 'warning');
                         setTimeout(() => removeSprite(target), 500);
                     }
@@ -2436,16 +3016,39 @@ PLAY SOUND "win"`
                 if (sprites[target]) {
                     const effect = document.createElement('div');
                     effect.className = 'collision-effect';
-                    effect.textContent = '💥';
+                    effect.textContent = isCrit ? '💥💥' : '💥';
                     effect.style.left = sprites[target].x + 'px';
                     effect.style.top = sprites[target].y + 'px';
-                    effect.style.fontSize = '32px';
+                    effect.style.fontSize = isCrit ? '48px' : '32px';
                     document.getElementById('game-canvas').appendChild(effect);
                     setTimeout(() => effect.remove(), 500);
                 }
+                
+                // Double strike chance (player only)
+                if (attacker === controlledSprite && Math.random() * 100 < playerBuffs.doubleStrikeChance) {
+                    setTimeout(() => {
+                        if (sprites[target] && gameState[target] && gameState[target].health > 0) {
+                            const doubleDamage = getEquippedDamage(attacker);
+                            gameState[target].health -= doubleDamage;
+                            updateDisplay(target + '.health', gameState[target].health);
+                            playSound('hit');
+                            log(`⚡ DOUBLE STRIKE! Additional ${doubleDamage} damage!`, 'success');
+                            
+                            if (gameState[target].health <= 0) {
+                                setTimeout(() => removeSprite(target), 300);
+                            }
+                        }
+                    }, 300);
+                }
             } else {
                 // Miss and take counter damage
-                const counterDamage = getEquippedDamage(target);
+                let counterDamage = getEquippedDamage(target);
+                
+                // Apply damage reduction (player only)
+                if (attacker === controlledSprite) {
+                    counterDamage = Math.max(0, counterDamage - playerBuffs.damageReduction);
+                }
+                
                 playSound('hit');
                 log(`💢 ${attacker} missed! ${target} counters for ${counterDamage} damage!`, 'error');
                 
@@ -2466,8 +3069,11 @@ PLAY SOUND "win"`
                         log(`💀 ${attacker} defeated!`, 'warning');
                         setTimeout(() => {
                             removeSprite(attacker);
-                            controlledSprite = null;
-                            updateSpriteSelector();
+                            if (attacker === controlledSprite) {
+                                controlledSprite = null;
+                                updateSpriteSelector();
+                                log('💀 GAME OVER! Restart infinite mode to try again.', 'error');
+                            }
                         }, 500);
                     }
                 }
