@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuestScript - Gaming Programming Language</title>
+    <title>QuestScript PRO - Enhanced Gaming Language</title>
     <style>
         * {
             margin: 0;
@@ -38,6 +38,23 @@
             font-size: 2.5em;
             margin-bottom: 10px;
             text-shadow: 0 0 10px rgba(78, 204, 163, 0.5);
+        }
+        
+        .pro-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a1a2e;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 10px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
         
         .subtitle {
@@ -82,6 +99,7 @@
             display: flex;
             gap: 10px;
             margin-top: 15px;
+            flex-wrap: wrap;
         }
         
         button {
@@ -107,6 +125,12 @@
             transform: translateY(0);
         }
         
+        .secondary-btn {
+            background: rgba(78, 204, 163, 0.2);
+            color: #4ecca3;
+            border: 1px solid #4ecca3;
+        }
+        
         #game-canvas {
             width: 100%;
             height: 400px;
@@ -121,6 +145,19 @@
             position: absolute;
             font-size: 32px;
             transition: all 0.3s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .sprite.damaged {
+            animation: shake 0.3s;
+            filter: brightness(0.5);
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
         
         #output {
@@ -151,6 +188,11 @@
             color: #4ecca3;
         }
         
+        .output-warning {
+            color: #ffd700;
+            border-left-color: #ffd700;
+        }
+        
         .examples {
             background: rgba(255, 255, 255, 0.08);
             border-radius: 10px;
@@ -178,8 +220,10 @@
             padding: 15px;
             border-radius: 5px;
             margin-top: 15px;
-            font-size: 13px;
+            font-size: 12px;
             line-height: 1.8;
+            max-height: 300px;
+            overflow-y: auto;
         }
         
         .syntax-guide code {
@@ -187,6 +231,19 @@
             padding: 2px 6px;
             border-radius: 3px;
             color: #4ecca3;
+        }
+        
+        .syntax-category {
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+        }
+        
+        .syntax-category h3 {
+            color: #ffd700;
+            font-size: 14px;
+            margin-bottom: 8px;
         }
         
         .health-bar {
@@ -209,46 +266,172 @@
             font-size: 14px;
             color: #ffd700;
         }
+        
+        .inventory-display {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            max-width: 200px;
+        }
+        
+        .collision-effect {
+            position: absolute;
+            pointer-events: none;
+            animation: explode 0.5s forwards;
+        }
+        
+        @keyframes explode {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+        
+        .feature-highlight {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #ffd700;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .feature-highlight h3 {
+            color: #ffd700;
+            margin-bottom: 5px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            font-size: 12px;
+        }
+        
+        .footer-brand {
+            background: linear-gradient(90deg, 
+                #ff0000 0%, 
+                #ff7f00 14%, 
+                #ffff00 28%, 
+                #00ff00 42%, 
+                #0000ff 57%, 
+                #4b0082 71%, 
+                #9400d3 85%, 
+                #ff0000 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+            letter-spacing: 2px;
+            animation: rainbow-shift 3s linear infinite;
+            background-size: 200% 100%;
+            margin-bottom: 10px;
+        }
+        
+        @keyframes rainbow-shift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+        
+        .sale-price {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .original-price {
+            color: #ff6b6b;
+            text-decoration: line-through;
+            margin-right: 10px;
+        }
+        
+        .sale-price-now {
+            color: #4ecca3;
+            font-size: 18px;
+            text-shadow: 0 0 10px rgba(78, 204, 163, 0.5);
+        }
+        
+        .sale-badge {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-right: 5px;
+            animation: pulse 2s infinite;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>⚔️ QuestScript ⚔️</h1>
-            <p class="subtitle">A Gaming-Inspired Programming Language</p>
+            <h1>⚔️ QuestScript <span class="pro-badge">PRO - FREE!</span></h1>
+            <p class="subtitle">Enhanced Gaming Programming Language - All Premium Features Unlocked!</p>
         </header>
+        
+        <div class="feature-highlight">
+            <h3>🎁 NEW PRO FEATURES - ALL FREE:</h3>
+            Collision Detection • Attack System • Inventory • Teleport • Loops • Sound Effects • Variables • Random Numbers • Patrol Paths • And More!
+        </div>
         
         <div class="main-content">
             <div class="panel">
                 <h2>📝 Code Editor</h2>
-                <textarea id="code-editor" spellcheck="false">// Welcome to QuestScript! 🎮
-// Try running this example or modify it!
+                <textarea id="code-editor" spellcheck="false">// QuestScript PRO - Try the new features! 🎮
 
-SPAWN player AT 50, 50 AS 🧙
-SPAWN enemy AT 300, 200 AS 👾
+SPAWN hero AT 50, 50 AS 🧙
+SPAWN enemy AT 350, 200 AS 👹
 SPAWN treasure AT 400, 100 AS 💎
+SPAWN potion AT 200, 250 AS 🧪
 
-SET player.health TO 100
-SET player.score TO 0
+SET hero.health TO 100
+SET hero.score TO 0
+SET hero.damage TO 25
 
-MOVE player RIGHT 100
-WAIT 500
-MOVE player DOWN 50
-WAIT 500
+// New! Inventory system
+INVENTORY hero ADD "sword"
+INVENTORY hero ADD "shield"
 
-SAY "Quest begins!" FOR 2000
+SAY "Epic quest begins!" FOR 2000
+WAIT 2000
 
-IF player.health > 50 THEN
-    SAY "Feeling strong!" FOR 1500
+// New! Teleport command
+TELEPORT hero TO 150, 150
+SAY "Teleported!" FOR 1000
+WAIT 1000
+
+// New! Loops
+REPEAT 3 TIMES
+    MOVE hero RIGHT 50
+    WAIT 500
 END
 
-ADD 10 TO player.score
-SAY "Score: " + player.score FOR 2000</textarea>
+// New! Attack with collision detection
+ATTACK hero TARGETS enemy WITH 25 DAMAGE
+WAIT 1500
+
+// New! Random movement
+SET randomX TO RANDOM 100, 400
+SET randomY TO RANDOM 50, 300
+MOVE enemy TO randomX, randomY
+WAIT 1000
+
+// Check collision and pick up items
+IF hero COLLIDES treasure THEN
+    ADD 100 TO hero.score
+    REMOVE treasure
+    SAY "Treasure collected! 💰" FOR 1500
+END
+
+SAY "Quest complete! Score: " + hero.score FOR 2000</textarea>
                 
                 <div class="button-group">
                     <button onclick="runCode()">▶️ RUN QUEST</button>
-                    <button onclick="stopCode()">⏹️ STOP</button>
-                    <button onclick="clearCanvas()">🗑️ CLEAR</button>
+                    <button onclick="stopCode()" class="secondary-btn">⏹️ STOP</button>
+                    <button onclick="clearCanvas()" class="secondary-btn">🗑️ CLEAR</button>
+                    <button onclick="toggleSound()" class="secondary-btn">🔊 SOUND: <span id="sound-status">ON</span></button>
                 </div>
                 
                 <div id="output"></div>
@@ -259,27 +442,67 @@ SAY "Score: " + player.score FOR 2000</textarea>
                 <div id="game-canvas">
                     <div class="health-bar" id="health-display">❤️ Health: --</div>
                     <div class="score-display" id="score-display">⭐ Score: --</div>
+                    <div class="inventory-display" id="inventory-display">🎒 Inventory: --</div>
                 </div>
                 
                 <div class="syntax-guide">
-                    <strong>Quick Reference:</strong><br>
-                    <code>SPAWN name AT x, y AS emoji</code> - Create character<br>
-                    <code>MOVE name UP/DOWN/LEFT/RIGHT distance</code><br>
-                    <code>SET name.property TO value</code><br>
-                    <code>SAY "text" FOR milliseconds</code><br>
-                    <code>WAIT milliseconds</code><br>
-                    <code>IF condition THEN ... END</code><br>
-                    <code>ADD/SUBTRACT value TO/FROM variable</code>
+                    <div class="syntax-category">
+                        <h3>⭐ BASIC COMMANDS</h3>
+                        <code>SPAWN name AT x, y AS emoji</code><br>
+                        <code>MOVE name UP/DOWN/LEFT/RIGHT distance</code><br>
+                        <code>MOVE name TO x, y</code> (absolute)<br>
+                        <code>TELEPORT name TO x, y</code> (instant)<br>
+                        <code>REMOVE name</code> (delete sprite)<br>
+                        <code>WAIT milliseconds</code>
+                    </div>
+                    
+                    <div class="syntax-category">
+                        <h3>⭐ VARIABLES & MATH</h3>
+                        <code>SET name.prop TO value</code><br>
+                        <code>SET var TO RANDOM min, max</code><br>
+                        <code>ADD value TO variable</code><br>
+                        <code>SUBTRACT value FROM variable</code><br>
+                        <code>MULTIPLY variable BY value</code><br>
+                        <code>DIVIDE variable BY value</code>
+                    </div>
+                    
+                    <div class="syntax-category">
+                        <h3>⭐ COMBAT & INVENTORY</h3>
+                        <code>ATTACK attacker TARGETS target WITH damage</code><br>
+                        <code>HEAL name BY amount</code><br>
+                        <code>INVENTORY name ADD "item"</code><br>
+                        <code>INVENTORY name REMOVE "item"</code><br>
+                        <code>INVENTORY name HAS "item"</code> (condition)
+                    </div>
+                    
+                    <div class="syntax-category">
+                        <h3>⭐ CONTROL FLOW</h3>
+                        <code>IF condition THEN ... END</code><br>
+                        <code>REPEAT n TIMES ... END</code><br>
+                        <code>name COLLIDES other</code> (condition)<br>
+                        <code>SAY "text" FOR ms</code><br>
+                        <code>PLAY SOUND "type"</code> (hit/coin/win/lose)
+                    </div>
                 </div>
             </div>
         </div>
         
         <div class="examples">
-            <h2>📚 Example Quests</h2>
-            <button class="example-btn" onclick="loadExample('basic')">Basic Movement</button>
-            <button class="example-btn" onclick="loadExample('battle')">Battle System</button>
-            <button class="example-btn" onclick="loadExample('collect')">Collect Items</button>
-            <button class="example-btn" onclick="loadExample('patrol')">Enemy Patrol</button>
+            <h2>📚 Example Quests (Now with PRO Features!)</h2>
+            <button class="example-btn" onclick="loadExample('rpg')">🎮 Full RPG Battle</button>
+            <button class="example-btn" onclick="loadExample('treasure')">💰 Treasure Hunt</button>
+            <button class="example-btn" onclick="loadExample('maze')">🗺️ Auto-Patrol Maze</button>
+            <button class="example-btn" onclick="loadExample('boss')">👹 Boss Fight</button>
+            <button class="example-btn" onclick="loadExample('random')">🎲 Random Events</button>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-brand">V4N1TY LCD           LONDON           .</div>
+            <div class="sale-price">
+                <span class="sale-badge">SALE</span>
+                <span class="original-price">$4.99</span>
+                <span class="sale-price-now">$0.00</span>
+            </div>
         </div>
     </div>
     
@@ -287,112 +510,357 @@ SAY "Score: " + player.score FOR 2000</textarea>
         let sprites = {};
         let gameState = {};
         let isRunning = false;
-        let currentExecution = null;
+        let soundEnabled = true;
+        let inventories = {};
         
         const examples = {
-            basic: `// Basic Movement Tutorial
-SPAWN hero AT 100, 200 AS 🦸
-SAY "Let's learn to move!" FOR 2000
-WAIT 2000
-
-MOVE hero RIGHT 150
-SAY "Moving right!" FOR 1500
-WAIT 1500
-
-MOVE hero UP 100
-SAY "Moving up!" FOR 1500
-WAIT 1500
-
-MOVE hero LEFT 150
-MOVE hero DOWN 100
-SAY "Back to start!" FOR 2000`,
-
-            battle: `// Battle System
+            rpg: `// Full RPG Battle with PRO features
 SPAWN knight AT 50, 200 AS ⚔️
 SPAWN dragon AT 400, 200 AS 🐉
+SPAWN potion AT 250, 100 AS 🧪
 
 SET knight.health TO 100
-SET dragon.health TO 80
-SET knight.damage TO 15
+SET knight.damage TO 20
+SET dragon.health TO 150
+SET dragon.damage TO 15
 
-SAY "Battle begins!" FOR 2000
+INVENTORY knight ADD "sword"
+INVENTORY knight ADD "shield"
+
+SAY "Boss Battle!" FOR 2000
+PLAY SOUND "start"
 WAIT 2000
 
-MOVE knight RIGHT 200
-SAY "Knight charges!" FOR 1500
-WAIT 1500
-
-SUBTRACT knight.damage FROM dragon.health
-SAY "Dragon takes damage!" FOR 1500
-WAIT 1500
-
-IF dragon.health > 0 THEN
-    SAY "Dragon still fights!" FOR 2000
-    SUBTRACT 20 FROM knight.health
+REPEAT 3 TIMES
+    // Knight attacks
+    MOVE knight RIGHT 100
+    ATTACK knight TARGETS dragon WITH knight.damage
+    PLAY SOUND "hit"
+    WAIT 1000
+    
+    // Dragon counters
+    IF dragon.health > 0 THEN
+        SUBTRACT dragon.damage FROM knight.health
+        SAY "Dragon hits back!" FOR 1000
+        PLAY SOUND "hit"
+    END
+    
+    MOVE knight LEFT 100
+    WAIT 1500
+    
+    // Use potion if needed
+    IF knight.health < 50 THEN
+        IF knight COLLIDES potion THEN
+            HEAL knight BY 30
+            REMOVE potion
+            SAY "Potion used! +30 HP" FOR 1500
+            PLAY SOUND "coin"
+        END
+    END
 END
 
-WAIT 2000
-SAY "Knight HP: " + knight.health FOR 2000`,
+IF dragon.health <= 0 THEN
+    SAY "Victory! 👑" FOR 2000
+    PLAY SOUND "win"
+ELSE
+    SAY "Dragon survives!" FOR 2000
+END`,
 
-            collect: `// Item Collection Game
+            treasure: `// Treasure Hunt with Collision Detection
 SPAWN player AT 50, 50 AS 🏃
-SPAWN coin1 AT 200, 100 AS 🪙
-SPAWN coin2 AT 350, 150 AS 🪙
-SPAWN coin3 AT 250, 250 AS 🪙
+SPAWN coin1 AT 150, 100 AS 🪙
+SPAWN coin2 AT 300, 200 AS 🪙
+SPAWN coin3 AT 400, 150 AS 🪙
+SPAWN gem AT 250, 250 AS 💎
 
 SET player.score TO 0
-SET player.coins TO 0
+SET coinsCollected TO 0
 
-SAY "Collect all coins!" FOR 2000
+SAY "Collect all treasures!" FOR 2000
 WAIT 2000
 
-MOVE player RIGHT 150
-MOVE player DOWN 50
-ADD 1 TO player.coins
-ADD 100 TO player.score
-SAY "Coin collected! Score: " + player.score FOR 1500
+// Random patrol for fun
+REPEAT 10 TIMES
+    SET randX TO RANDOM 50, 450
+    SET randY TO RANDOM 50, 350
+    MOVE player TO randX, randY
+    WAIT 800
+    
+    IF player COLLIDES coin1 THEN
+        ADD 10 TO player.score
+        ADD 1 TO coinsCollected
+        REMOVE coin1
+        PLAY SOUND "coin"
+        SAY "Coin! Score: " + player.score FOR 1000
+    END
+    
+    IF player COLLIDES coin2 THEN
+        ADD 10 TO player.score
+        ADD 1 TO coinsCollected
+        REMOVE coin2
+        PLAY SOUND "coin"
+        SAY "Coin! Score: " + player.score FOR 1000
+    END
+    
+    IF player COLLIDES coin3 THEN
+        ADD 10 TO player.score
+        ADD 1 TO coinsCollected
+        REMOVE coin3
+        PLAY SOUND "coin"
+        SAY "Coin! Score: " + player.score FOR 1000
+    END
+    
+    IF player COLLIDES gem THEN
+        ADD 50 TO player.score
+        REMOVE gem
+        PLAY SOUND "win"
+        SAY "JACKPOT! 💎 Score: " + player.score FOR 2000
+    END
+END
 
-WAIT 1500
-MOVE player RIGHT 100
-MOVE player DOWN 100
-ADD 1 TO player.coins
-ADD 100 TO player.score
-SAY "2 coins! Score: " + player.score FOR 1500
+SAY "Final Score: " + player.score FOR 3000`,
 
-WAIT 1500
-SAY "Coins collected: " + player.coins FOR 2000`,
-
-            patrol: `// Enemy Patrol Pattern
-SPAWN guard AT 100, 150 AS 💂
+            maze: `// Auto-Patrol Enemy Maze
+SPAWN guard1 AT 100, 100 AS 💂
+SPAWN guard2 AT 300, 100 AS 💂
 SPAWN player AT 50, 300 AS 🥷
+SPAWN exit AT 450, 50 AS 🚪
 
-SET guard.alert TO false
+SET player.caught TO false
 
-SAY "Sneak past the guard!" FOR 2000
+SAY "Sneak to the exit! 🚪" FOR 2000
 WAIT 2000
 
-// Guard patrols
-MOVE guard RIGHT 150
-WAIT 1000
-MOVE guard DOWN 100
-WAIT 1000
-MOVE guard LEFT 150
-WAIT 1000
-MOVE guard UP 100
+// Guards patrol automatically
+REPEAT 5 TIMES
+    // Guard 1 patrol
+    MOVE guard1 RIGHT 200
+    MOVE guard1 DOWN 150
+    MOVE guard1 LEFT 200
+    MOVE guard1 UP 150
+    
+    // Guard 2 patrol  
+    MOVE guard2 DOWN 200
+    MOVE guard2 LEFT 150
+    MOVE guard2 UP 200
+    MOVE guard2 RIGHT 150
+    
+    // Player tries to sneak
+    TELEPORT player TO 150, 250
+    WAIT 500
+    TELEPORT player TO 250, 180
+    WAIT 500
+    TELEPORT player TO 350, 120
+    WAIT 500
+    
+    // Check if caught
+    IF player COLLIDES guard1 THEN
+        SET player.caught TO true
+        SAY "CAUGHT! 🚨" FOR 2000
+        PLAY SOUND "lose"
+    END
+    
+    IF player COLLIDES guard2 THEN
+        SET player.caught TO true
+        SAY "CAUGHT! 🚨" FOR 2000
+        PLAY SOUND "lose"
+    END
+    
+    // Check if escaped
+    IF player COLLIDES exit THEN
+        SAY "ESCAPED! 🎉" FOR 2000
+        PLAY SOUND "win"
+    END
+END`,
 
-SAY "Guard pattern complete" FOR 1500
+            boss: `// Epic Boss Fight
+SPAWN hero AT 50, 200 AS 🦸
+SPAWN boss AT 400, 200 AS 👾
+SPAWN heart1 AT 250, 100 AS ❤️
+SPAWN heart2 AT 250, 300 AS ❤️
+
+SET hero.health TO 80
+SET hero.damage TO 30
+SET boss.health TO 200
+SET phase TO 1
+
+INVENTORY hero ADD "legendary sword"
+
+SAY "BOSS FIGHT BEGIN!" FOR 2000
+PLAY SOUND "start"
+WAIT 2000
+
+// Phase 1
+SAY "Phase 1: The Awakening" FOR 1500
 WAIT 1500
 
-// Player moves
-MOVE player RIGHT 200
-MOVE player UP 150
-SAY "Player sneaking..." FOR 2000`
+REPEAT 3 TIMES
+    MOVE hero RIGHT 100
+    ATTACK hero TARGETS boss WITH hero.damage
+    PLAY SOUND "hit"
+    SAY "Boss HP: " + boss.health FOR 1000
+    WAIT 1000
+    
+    SUBTRACT 20 FROM hero.health
+    MOVE hero LEFT 100
+    WAIT 1000
+    
+    // Grab health if needed
+    IF hero.health < 50 THEN
+        IF hero COLLIDES heart1 THEN
+            HEAL hero BY 40
+            REMOVE heart1
+            PLAY SOUND "coin"
+        END
+    END
+END
+
+// Phase 2
+IF boss.health > 0 THEN
+    SAY "Phase 2: RAGE MODE! 🔥" FOR 2000
+    MULTIPLY boss.damage BY 2
+    WAIT 2000
+    
+    REPEAT 2 TIMES
+        SET randomX TO RANDOM 100, 400
+        TELEPORT boss TO randomX, 200
+        ATTACK hero TARGETS boss WITH 40
+        PLAY SOUND "hit"
+        WAIT 1500
+    END
+END
+
+IF boss.health <= 0 THEN
+    SAY "VICTORY! 👑🎉" FOR 3000
+    PLAY SOUND "win"
+ELSE
+    SAY "The battle continues..." FOR 2000
+END`,
+
+            random: `// Random Events Quest
+SPAWN adventurer AT 50, 200 AS 🧙‍♂️
+SPAWN monster AT 400, 200 AS 👻
+
+SET adventurer.health TO 100
+SET adventurer.luck TO RANDOM 1, 10
+SET monster.health TO 80
+
+SAY "A random adventure begins!" FOR 2000
+WAIT 2000
+
+SAY "Your luck score: " + adventurer.luck FOR 2000
+WAIT 2000
+
+// Random events based on luck
+IF adventurer.luck > 7 THEN
+    SAY "Lucky day! Found treasure! 🎰" FOR 2000
+    SPAWN treasure AT 250, 150 AS 💰
+    PLAY SOUND "win"
+END
+
+IF adventurer.luck < 4 THEN
+    SAY "Bad luck! Extra monster! 😱" FOR 2000
+    SPAWN monster2 AT 350, 100 AS 👹
+END
+
+// Random battle outcomes
+REPEAT 3 TIMES
+    SET hitChance TO RANDOM 1, 100
+    
+    IF hitChance > 50 THEN
+        MOVE adventurer RIGHT 80
+        SET damage TO RANDOM 15, 35
+        ATTACK adventurer TARGETS monster WITH damage
+        PLAY SOUND "hit"
+        SAY "Critical hit! " + damage + " damage!" FOR 1000
+    ELSE
+        SAY "Attack missed! 💨" FOR 1000
+        PLAY SOUND "lose"
+    END
+    
+    WAIT 1500
+    MOVE adventurer LEFT 80
+    WAIT 1000
+END
+
+// Random ending
+SET ending TO RANDOM 1, 3
+
+IF ending == 1 THEN
+    SAY "You won with style! 🎊" FOR 2000
+END
+
+IF ending == 2 THEN
+    SAY "Barely survived! 😅" FOR 2000
+END
+
+IF ending == 3 THEN
+    SAY "Legendary victory! 👑" FOR 2000
+END
+
+PLAY SOUND "win"`
         };
         
-        function log(message, isError = false) {
+        // Audio context for sound effects
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            if (!soundEnabled) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            switch(type) {
+                case 'hit':
+                    oscillator.frequency.value = 200;
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.1);
+                    break;
+                case 'coin':
+                    oscillator.frequency.value = 800;
+                    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.2);
+                    break;
+                case 'win':
+                    oscillator.frequency.value = 523.25;
+                    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(783.99, audioContext.currentTime + 0.3);
+                    oscillator.stop(audioContext.currentTime + 0.3);
+                    break;
+                case 'lose':
+                    oscillator.frequency.value = 400;
+                    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.4);
+                    oscillator.stop(audioContext.currentTime + 0.4);
+                    break;
+                case 'start':
+                    oscillator.frequency.value = 440;
+                    gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.15);
+                    break;
+            }
+        }
+        
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('sound-status').textContent = soundEnabled ? 'ON' : 'OFF';
+            log(soundEnabled ? '🔊 Sound enabled' : '🔇 Sound disabled');
+        }
+        
+        function log(message, type = 'success') {
             const output = document.getElementById('output');
             const line = document.createElement('div');
-            line.className = isError ? 'output-line output-error' : 'output-line output-success';
+            line.className = `output-line output-${type}`;
             line.textContent = message;
             output.appendChild(line);
             output.scrollTop = output.scrollHeight;
@@ -409,6 +877,7 @@ SAY "Player sneaking..." FOR 2000`
             sprite.textContent = emoji;
             sprite.style.left = x + 'px';
             sprite.style.top = y + 'px';
+            sprite.id = 'sprite-' + name;
             canvas.appendChild(sprite);
             
             sprites[name] = {
@@ -450,6 +919,142 @@ SAY "Player sneaking..." FOR 2000`
             }
         }
         
+        function moveSpriteToPosition(name, x, y) {
+            if (!sprites[name]) return;
+            
+            const sprite = sprites[name];
+            sprite.x = x;
+            sprite.y = y;
+            sprite.element.style.left = x + 'px';
+            sprite.element.style.top = y + 'px';
+            
+            if (gameState[name]) {
+                gameState[name].x = x;
+                gameState[name].y = y;
+            }
+        }
+        
+        function teleportSprite(name, x, y) {
+            if (!sprites[name]) return;
+            
+            const sprite = sprites[name];
+            sprite.element.style.transition = 'none';
+            sprite.x = x;
+            sprite.y = y;
+            sprite.element.style.left = x + 'px';
+            sprite.element.style.top = y + 'px';
+            
+            setTimeout(() => {
+                sprite.element.style.transition = 'all 0.3s ease';
+            }, 50);
+            
+            if (gameState[name]) {
+                gameState[name].x = x;
+                gameState[name].y = y;
+            }
+        }
+        
+        function removeSprite(name) {
+            if (sprites[name]) {
+                sprites[name].element.remove();
+                delete sprites[name];
+                delete gameState[name];
+            }
+        }
+        
+        function checkCollision(name1, name2) {
+            if (!sprites[name1] || !sprites[name2]) return false;
+            
+            const s1 = sprites[name1];
+            const s2 = sprites[name2];
+            
+            const distance = Math.sqrt(
+                Math.pow(s1.x - s2.x, 2) + Math.pow(s1.y - s2.y, 2)
+            );
+            
+            return distance < 40;
+        }
+        
+        function attackTarget(attacker, target, damage) {
+            if (!sprites[attacker] || !sprites[target]) return;
+            
+            if (gameState[target] && gameState[target].health !== undefined) {
+                gameState[target].health -= damage;
+                updateDisplay(target + '.health', gameState[target].health);
+                
+                sprites[target].element.classList.add('damaged');
+                setTimeout(() => {
+                    if (sprites[target]) {
+                        sprites[target].element.classList.remove('damaged');
+                    }
+                }, 300);
+                
+                // Collision effect
+                const effect = document.createElement('div');
+                effect.className = 'collision-effect';
+                effect.textContent = '💥';
+                effect.style.left = sprites[target].x + 'px';
+                effect.style.top = sprites[target].y + 'px';
+                effect.style.fontSize = '32px';
+                document.getElementById('game-canvas').appendChild(effect);
+                setTimeout(() => effect.remove(), 500);
+                
+                if (gameState[target].health <= 0) {
+                    log(`💀 ${target} defeated!`, 'warning');
+                    setTimeout(() => removeSprite(target), 500);
+                }
+            }
+        }
+        
+        function healTarget(name, amount) {
+            if (!gameState[name]) return;
+            
+            if (gameState[name].health !== undefined) {
+                gameState[name].health += amount;
+                updateDisplay(name + '.health', gameState[name].health);
+                
+                const effect = document.createElement('div');
+                effect.className = 'collision-effect';
+                effect.textContent = '✨';
+                effect.style.left = sprites[name].x + 'px';
+                effect.style.top = sprites[name].y + 'px';
+                effect.style.fontSize = '32px';
+                effect.style.color = '#4ecca3';
+                document.getElementById('game-canvas').appendChild(effect);
+                setTimeout(() => effect.remove(), 500);
+            }
+        }
+        
+        function manageInventory(name, action, item) {
+            if (!inventories[name]) inventories[name] = [];
+            
+            if (action === 'add') {
+                inventories[name].push(item);
+                updateInventoryDisplay(name);
+                log(`📦 ${item} added to ${name}'s inventory`);
+            } else if (action === 'remove') {
+                const index = inventories[name].indexOf(item);
+                if (index > -1) {
+                    inventories[name].splice(index, 1);
+                    updateInventoryDisplay(name);
+                    log(`📦 ${item} removed from ${name}'s inventory`);
+                }
+            }
+        }
+        
+        function hasInInventory(name, item) {
+            return inventories[name] && inventories[name].includes(item);
+        }
+        
+        function updateInventoryDisplay(name) {
+            const display = document.getElementById('inventory-display');
+            if (inventories[name] && inventories[name].length > 0) {
+                display.textContent = `🎒 ${name}: ${inventories[name].join(', ')}`;
+            } else {
+                display.textContent = `🎒 Inventory: --`;
+            }
+        }
+        
         function showMessage(text, duration) {
             return new Promise(resolve => {
                 const canvas = document.getElementById('game-canvas');
@@ -483,12 +1088,17 @@ SAY "Player sneaking..." FOR 2000`
             }
         }
         
+        function getRandom(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        
         async function executeCommand(command) {
             if (!isRunning) return;
             
             command = command.trim();
             if (!command || command.startsWith('//')) return;
             
+            // SPAWN
             const spawnMatch = command.match(/SPAWN (\w+) AT (\d+),\s*(\d+) AS (.+)/i);
             if (spawnMatch) {
                 const [, name, x, y, emoji] = spawnMatch;
@@ -497,6 +1107,7 @@ SAY "Player sneaking..." FOR 2000`
                 return;
             }
             
+            // MOVE with direction
             const moveMatch = command.match(/MOVE (\w+) (UP|DOWN|LEFT|RIGHT) (\d+)/i);
             if (moveMatch) {
                 const [, name, direction, distance] = moveMatch;
@@ -506,14 +1117,100 @@ SAY "Player sneaking..." FOR 2000`
                 return;
             }
             
-            const sayMatch = command.match(/SAY "(.+)" FOR (\d+)/i);
-            if (sayMatch) {
-                const [, text, duration] = sayMatch;
-                log(`💬 "${text}"`);
-                await showMessage(text, parseInt(duration));
+            // MOVE TO position
+            const moveToMatch = command.match(/MOVE (\w+) TO (\d+),\s*(\d+)/i);
+            if (moveToMatch) {
+                const [, name, x, y] = moveToMatch;
+                moveSpriteToPosition(name, parseInt(x), parseInt(y));
+                log(`✓ Moved ${name} to (${x}, ${y})`);
+                await new Promise(resolve => setTimeout(resolve, 300));
                 return;
             }
             
+            // TELEPORT
+            const teleportMatch = command.match(/TELEPORT (\w+) TO (\d+),\s*(\d+)/i);
+            if (teleportMatch) {
+                const [, name, x, y] = teleportMatch;
+                teleportSprite(name, parseInt(x), parseInt(y));
+                log(`✓ Teleported ${name} to (${x}, ${y})`);
+                return;
+            }
+            
+            // REMOVE
+            const removeMatch = command.match(/REMOVE (\w+)/i);
+            if (removeMatch) {
+                const name = removeMatch[1];
+                removeSprite(name);
+                log(`✓ Removed ${name}`);
+                return;
+            }
+            
+            // ATTACK
+            const attackMatch = command.match(/ATTACK (\w+) TARGETS (\w+) WITH (\d+)/i);
+            if (attackMatch) {
+                const [, attacker, target, damage] = attackMatch;
+                attackTarget(attacker, target, parseInt(damage));
+                playSound('hit');
+                log(`⚔️ ${attacker} attacks ${target} for ${damage} damage!`);
+                await new Promise(resolve => setTimeout(resolve, 500));
+                return;
+            }
+            
+            // HEAL
+            const healMatch = command.match(/HEAL (\w+) BY (\d+)/i);
+            if (healMatch) {
+                const [, name, amount] = healMatch;
+                healTarget(name, parseInt(amount));
+                playSound('coin');
+                log(`✨ ${name} healed by ${amount}!`);
+                return;
+            }
+            
+            // INVENTORY
+            const invMatch = command.match(/INVENTORY (\w+) (ADD|REMOVE) "(.+)"/i);
+            if (invMatch) {
+                const [, name, action, item] = invMatch;
+                manageInventory(name, action.toLowerCase(), item);
+                return;
+            }
+            
+            // PLAY SOUND
+            const soundMatch = command.match(/PLAY SOUND "(.+)"/i);
+            if (soundMatch) {
+                playSound(soundMatch[1]);
+                return;
+            }
+            
+            // SAY
+            const sayMatch = command.match(/SAY "(.+)" FOR (\d+)/i);
+            if (sayMatch) {
+                const [, text, duration] = sayMatch;
+                
+                // Handle variable substitution
+                let displayText = text;
+                const varMatches = text.matchAll(/(\w+)\.(\w+)/g);
+                for (const match of varMatches) {
+                    const [full, name, prop] = match;
+                    if (gameState[name] && gameState[name][prop] !== undefined) {
+                        displayText = displayText.replace(full, gameState[name][prop]);
+                    }
+                }
+                
+                // Handle direct variable substitution
+                const directVarMatches = text.matchAll(/(?<!")(\w+)(?!")/g);
+                for (const match of directVarMatches) {
+                    const varName = match[1];
+                    if (gameState[varName] !== undefined && typeof gameState[varName] !== 'object') {
+                        displayText = displayText.replace(new RegExp(`(?<!")${varName}(?!")`, 'g'), gameState[varName]);
+                    }
+                }
+                
+                log(`💬 "${displayText}"`);
+                await showMessage(displayText, parseInt(duration));
+                return;
+            }
+            
+            // WAIT
             const waitMatch = command.match(/WAIT (\d+)/i);
             if (waitMatch) {
                 const duration = parseInt(waitMatch[1]);
@@ -521,17 +1218,42 @@ SAY "Player sneaking..." FOR 2000`
                 return;
             }
             
-            const setMatch = command.match(/SET (\w+)\.(\w+) TO (.+)/i);
-            if (setMatch) {
-                const [, name, property, value] = setMatch;
-                if (!gameState[name]) gameState[name] = {};
-                const numValue = isNaN(value) ? value : parseFloat(value);
-                gameState[name][property] = numValue;
-                updateDisplay(`${name}.${property}`, numValue);
-                log(`✓ Set ${name}.${property} = ${numValue}`);
+            // SET with RANDOM
+            const setRandomMatch = command.match(/SET (\w+) TO RANDOM (\d+),\s*(\d+)/i);
+            if (setRandomMatch) {
+                const [, varName, min, max] = setRandomMatch;
+                const value = getRandom(parseInt(min), parseInt(max));
+                gameState[varName] = value;
+                log(`✓ Set ${varName} = ${value} (random)`);
                 return;
             }
             
+            // SET
+            const setMatch = command.match(/SET (\w+)\.?(\w+)? TO (.+)/i);
+            if (setMatch) {
+                const [, name, property, value] = setMatch;
+                
+                // Evaluate value if it's a variable reference
+                let finalValue = value.trim();
+                if (gameState[finalValue] !== undefined) {
+                    finalValue = gameState[finalValue];
+                } else if (!isNaN(finalValue)) {
+                    finalValue = parseFloat(finalValue);
+                }
+                
+                if (property) {
+                    if (!gameState[name]) gameState[name] = {};
+                    gameState[name][property] = finalValue;
+                    updateDisplay(`${name}.${property}`, finalValue);
+                    log(`✓ Set ${name}.${property} = ${finalValue}`);
+                } else {
+                    gameState[name] = finalValue;
+                    log(`✓ Set ${name} = ${finalValue}`);
+                }
+                return;
+            }
+            
+            // ADD
             const addMatch = command.match(/ADD (\d+) TO (\w+)\.?(\w+)?/i);
             if (addMatch) {
                 const [, value, name, property] = addMatch;
@@ -541,10 +1263,15 @@ SAY "Player sneaking..." FOR 2000`
                     gameState[name][property] += parseFloat(value);
                     updateDisplay(`${name}.${property}`, gameState[name][property]);
                     log(`✓ Added ${value} to ${name}.${property} (now ${gameState[name][property]})`);
+                } else {
+                    if (gameState[name] === undefined) gameState[name] = 0;
+                    gameState[name] += parseFloat(value);
+                    log(`✓ Added ${value} to ${name} (now ${gameState[name]})`);
                 }
                 return;
             }
             
+            // SUBTRACT
             const subtractMatch = command.match(/SUBTRACT (\d+) FROM (\w+)\.?(\w+)?/i);
             if (subtractMatch) {
                 const [, value, name, property] = subtractMatch;
@@ -554,6 +1281,48 @@ SAY "Player sneaking..." FOR 2000`
                     gameState[name][property] -= parseFloat(value);
                     updateDisplay(`${name}.${property}`, gameState[name][property]);
                     log(`✓ Subtracted ${value} from ${name}.${property} (now ${gameState[name][property]})`);
+                } else {
+                    if (gameState[name] === undefined) gameState[name] = 0;
+                    gameState[name] -= parseFloat(value);
+                    log(`✓ Subtracted ${value} from ${name} (now ${gameState[name]})`);
+                }
+                return;
+            }
+            
+            // MULTIPLY
+            const multiplyMatch = command.match(/MULTIPLY (\w+)\.?(\w+)? BY (\d+)/i);
+            if (multiplyMatch) {
+                const [, name, property, value] = multiplyMatch;
+                if (property) {
+                    if (gameState[name] && gameState[name][property] !== undefined) {
+                        gameState[name][property] *= parseFloat(value);
+                        updateDisplay(`${name}.${property}`, gameState[name][property]);
+                        log(`✓ Multiplied ${name}.${property} by ${value} (now ${gameState[name][property]})`);
+                    }
+                } else {
+                    if (gameState[name] !== undefined) {
+                        gameState[name] *= parseFloat(value);
+                        log(`✓ Multiplied ${name} by ${value} (now ${gameState[name]})`);
+                    }
+                }
+                return;
+            }
+            
+            // DIVIDE
+            const divideMatch = command.match(/DIVIDE (\w+)\.?(\w+)? BY (\d+)/i);
+            if (divideMatch) {
+                const [, name, property, value] = divideMatch;
+                if (property) {
+                    if (gameState[name] && gameState[name][property] !== undefined) {
+                        gameState[name][property] /= parseFloat(value);
+                        updateDisplay(`${name}.${property}`, gameState[name][property]);
+                        log(`✓ Divided ${name}.${property} by ${value} (now ${gameState[name][property]})`);
+                    }
+                } else {
+                    if (gameState[name] !== undefined) {
+                        gameState[name] /= parseFloat(value);
+                        log(`✓ Divided ${name} by ${value} (now ${gameState[name]})`);
+                    }
                 }
                 return;
             }
@@ -566,6 +1335,36 @@ SAY "Player sneaking..." FOR 2000`
             while (i < lines.length && isRunning) {
                 const line = lines[i].trim();
                 
+                // REPEAT loops
+                if (line.startsWith('REPEAT')) {
+                    const repeatMatch = line.match(/REPEAT (\d+) TIMES/i);
+                    if (repeatMatch) {
+                        const times = parseInt(repeatMatch[1]);
+                        const loopStart = i + 1;
+                        let loopEnd = loopStart;
+                        
+                        // Find END
+                        let depth = 1;
+                        while (loopEnd < lines.length && depth > 0) {
+                            if (lines[loopEnd].trim().startsWith('REPEAT')) depth++;
+                            if (lines[loopEnd].trim().startsWith('END')) depth--;
+                            loopEnd++;
+                        }
+                        loopEnd--;
+                        
+                        // Execute loop
+                        for (let rep = 0; rep < times && isRunning; rep++) {
+                            for (let j = loopStart; j < loopEnd && isRunning; j++) {
+                                await executeCommand(lines[j]);
+                            }
+                        }
+                        
+                        i = loopEnd + 1;
+                        continue;
+                    }
+                }
+                
+                // IF statements
                 if (line.startsWith('IF')) {
                     const conditionMatch = line.match(/IF (.+) THEN/i);
                     if (conditionMatch) {
@@ -599,10 +1398,30 @@ SAY "Player sneaking..." FOR 2000`
         
         function evaluateCondition(condition) {
             try {
-                const varMatch = condition.match(/(\w+)\.(\w+)\s*([><=!]+)\s*(\d+)/);
+                // COLLIDES check
+                const collideMatch = condition.match(/(\w+) COLLIDES (\w+)/i);
+                if (collideMatch) {
+                    return checkCollision(collideMatch[1], collideMatch[2]);
+                }
+                
+                // INVENTORY HAS check
+                const invHasMatch = condition.match(/INVENTORY (\w+) HAS "(.+)"/i);
+                if (invHasMatch) {
+                    return hasInInventory(invHasMatch[1], invHasMatch[2]);
+                }
+                
+                // Variable comparisons
+                const varMatch = condition.match(/(\w+)\.?(\w+)?\s*([><=!]+)\s*(\d+)/);
                 if (varMatch) {
                     const [, name, property, operator, value] = varMatch;
-                    const varValue = gameState[name]?.[property] ?? 0;
+                    let varValue;
+                    
+                    if (property) {
+                        varValue = gameState[name]?.[property] ?? 0;
+                    } else {
+                        varValue = gameState[name] ?? 0;
+                    }
+                    
                     const numValue = parseFloat(value);
                     
                     switch (operator) {
@@ -622,7 +1441,7 @@ SAY "Player sneaking..." FOR 2000`
         
         function runCode() {
             if (isRunning) {
-                log('⚠ Quest already running!', true);
+                log('⚠ Quest already running!', 'error');
                 return;
             }
             
@@ -631,10 +1450,10 @@ SAY "Player sneaking..." FOR 2000`
             
             const code = document.getElementById('code-editor').value;
             isRunning = true;
-            log('🎮 Starting quest...');
+            log('🎮 Starting PRO quest...');
             
             executeProgram(code).catch(error => {
-                log(`❌ Error: ${error.message}`, true);
+                log(`❌ Error: ${error.message}`, 'error');
                 isRunning = false;
             });
         }
@@ -646,12 +1465,14 @@ SAY "Player sneaking..." FOR 2000`
         
         function clearCanvas() {
             const canvas = document.getElementById('game-canvas');
-            const spritesToRemove = canvas.querySelectorAll('.sprite');
+            const spritesToRemove = canvas.querySelectorAll('.sprite, .collision-effect');
             spritesToRemove.forEach(s => s.remove());
             sprites = {};
             gameState = {};
+            inventories = {};
             document.getElementById('health-display').textContent = '❤️ Health: --';
             document.getElementById('score-display').textContent = '⭐ Score: --';
+            document.getElementById('inventory-display').textContent = '🎒 Inventory: --';
         }
         
         function loadExample(exampleName) {
