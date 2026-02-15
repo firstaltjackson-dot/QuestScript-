@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuestScript - Gaming Programming Language</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e8e8e8;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 2px solid #4ecca3;
+        }
+        
+        h1 {
+            color: #4ecca3;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(78, 204, 163, 0.5);
+        }
+        
+        .subtitle {
+            color: #a8dadc;
+            font-size: 1.1em;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .panel {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid rgba(78, 204, 163, 0.3);
+        }
+        
+        .panel h2 {
+            color: #4ecca3;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        #code-editor {
+            width: 100%;
+            min-height: 400px;
+            background: #0f0f23;
+            color: #4ecca3;
+            border: 2px solid #4ecca3;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        button {
+            background: #4ecca3;
+            color: #1a1a2e;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: #45b393;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 204, 163, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        #game-canvas {
+            width: 100%;
+            height: 400px;
+            background: #0a0a15;
+            border: 2px solid #4ecca3;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sprite {
+            position: absolute;
+            font-size: 32px;
+            transition: all 0.3s ease;
+        }
+        
+        #output {
+            background: #0f0f23;
+            border: 2px solid #4ecca3;
+            border-radius: 5px;
+            padding: 15px;
+            min-height: 150px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+        
+        .output-line {
+            margin: 5px 0;
+            padding: 5px;
+            border-left: 3px solid #4ecca3;
+            padding-left: 10px;
+        }
+        
+        .output-error {
+            color: #ff6b6b;
+            border-left-color: #ff6b6b;
+        }
+        
+        .output-success {
+            color: #4ecca3;
+        }
+        
+        .examples {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid rgba(78, 204, 163, 0.3);
+        }
+        
+        .example-btn {
+            background: rgba(78, 204, 163, 0.2);
+            color: #4ecca3;
+            border: 1px solid #4ecca3;
+            padding: 8px 16px;
+            margin: 5px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .example-btn:hover {
+            background: rgba(78, 204, 163, 0.3);
+        }
+        
+        .syntax-guide {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+        
+        .syntax-guide code {
+            background: #0f0f23;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #4ecca3;
+        }
+        
+        .health-bar {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .score-display {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚔️ QuestScript ⚔️</h1>
+            <p class="subtitle">A Gaming-Inspired Programming Language</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="panel">
+                <h2>📝 Code Editor</h2>
+                <textarea id="code-editor" spellcheck="false">// Welcome to QuestScript! 🎮
+// Try running this example or modify it!
+
+SPAWN player AT 50, 50 AS 🧙
+SPAWN enemy AT 300, 200 AS 👾
+SPAWN treasure AT 400, 100 AS 💎
+
+SET player.health TO 100
+SET player.score TO 0
+
+MOVE player RIGHT 100
+WAIT 500
+MOVE player DOWN 50
+WAIT 500
+
+SAY "Quest begins!" FOR 2000
+
+IF player.health > 50 THEN
+    SAY "Feeling strong!" FOR 1500
+END
+
+ADD 10 TO player.score
+SAY "Score: " + player.score FOR 2000</textarea>
+                
+                <div class="button-group">
+                    <button onclick="runCode()">▶️ RUN QUEST</button>
+                    <button onclick="stopCode()">⏹️ STOP</button>
+                    <button onclick="clearCanvas()">🗑️ CLEAR</button>
+                </div>
+                
+                <div id="output"></div>
+            </div>
+            
+            <div class="panel">
+                <h2>🎮 Game World</h2>
+                <div id="game-canvas">
+                    <div class="health-bar" id="health-display">❤️ Health: --</div>
+                    <div class="score-display" id="score-display">⭐ Score: --</div>
+                </div>
+                
+                <div class="syntax-guide">
+                    <strong>Quick Reference:</strong><br>
+                    <code>SPAWN name AT x, y AS emoji</code> - Create character<br>
+                    <code>MOVE name UP/DOWN/LEFT/RIGHT distance</code><br>
+                    <code>SET name.property TO value</code><br>
+                    <code>SAY "text" FOR milliseconds</code><br>
+                    <code>WAIT milliseconds</code><br>
+                    <code>IF condition THEN ... END</code><br>
+                    <code>ADD/SUBTRACT value TO/FROM variable</code>
+                </div>
+            </div>
+        </div>
+        
+        <div class="examples">
+            <h2>📚 Example Quests</h2>
+            <button class="example-btn" onclick="loadExample('basic')">Basic Movement</button>
+            <button class="example-btn" onclick="loadExample('battle')">Battle System</button>
+            <button class="example-btn" onclick="loadExample('collect')">Collect Items</button>
+            <button class="example-btn" onclick="loadExample('patrol')">Enemy Patrol</button>
+        </div>
+    </div>
+    
+    <script>
+        let sprites = {};
+        let gameState = {};
+        let isRunning = false;
+        let currentExecution = null;
+        
+        const examples = {
+            basic: `// Basic Movement Tutorial
+SPAWN hero AT 100, 200 AS 🦸
+SAY "Let's learn to move!" FOR 2000
+WAIT 2000
+
+MOVE hero RIGHT 150
+SAY "Moving right!" FOR 1500
+WAIT 1500
+
+MOVE hero UP 100
+SAY "Moving up!" FOR 1500
+WAIT 1500
+
+MOVE hero LEFT 150
+MOVE hero DOWN 100
+SAY "Back to start!" FOR 2000`,
+
+            battle: `// Battle System
+SPAWN knight AT 50, 200 AS ⚔️
+SPAWN dragon AT 400, 200 AS 🐉
+
+SET knight.health TO 100
+SET dragon.health TO 80
+SET knight.damage TO 15
+
+SAY "Battle begins!" FOR 2000
+WAIT 2000
+
+MOVE knight RIGHT 200
+SAY "Knight charges!" FOR 1500
+WAIT 1500
+
+SUBTRACT knight.damage FROM dragon.health
+SAY "Dragon takes damage!" FOR 1500
+WAIT 1500
+
+IF dragon.health > 0 THEN
+    SAY "Dragon still fights!" FOR 2000
+    SUBTRACT 20 FROM knight.health
+END
+
+WAIT 2000
+SAY "Knight HP: " + knight.health FOR 2000`,
+
+            collect: `// Item Collection Game
+SPAWN player AT 50, 50 AS 🏃
+SPAWN coin1 AT 200, 100 AS 🪙
+SPAWN coin2 AT 350, 150 AS 🪙
+SPAWN coin3 AT 250, 250 AS 🪙
+
+SET player.score TO 0
+SET player.coins TO 0
+
+SAY "Collect all coins!" FOR 2000
+WAIT 2000
+
+MOVE player RIGHT 150
+MOVE player DOWN 50
+ADD 1 TO player.coins
+ADD 100 TO player.score
+SAY "Coin collected! Score: " + player.score FOR 1500
+
+WAIT 1500
+MOVE player RIGHT 100
+MOVE player DOWN 100
+ADD 1 TO player.coins
+ADD 100 TO player.score
+SAY "2 coins! Score: " + player.score FOR 1500
+
+WAIT 1500
+SAY "Coins collected: " + player.coins FOR 2000`,
+
+            patrol: `// Enemy Patrol Pattern
+SPAWN guard AT 100, 150 AS 💂
+SPAWN player AT 50, 300 AS 🥷
+
+SET guard.alert TO false
+
+SAY "Sneak past the guard!" FOR 2000
+WAIT 2000
+
+// Guard patrols
+MOVE guard RIGHT 150
+WAIT 1000
+MOVE guard DOWN 100
+WAIT 1000
+MOVE guard LEFT 150
+WAIT 1000
+MOVE guard UP 100
+
+SAY "Guard pattern complete" FOR 1500
+WAIT 1500
+
+// Player moves
+MOVE player RIGHT 200
+MOVE player UP 150
+SAY "Player sneaking..." FOR 2000`
+        };
+        
+        function log(message, isError = false) {
+            const output = document.getElementById('output');
+            const line = document.createElement('div');
+            line.className = isError ? 'output-line output-error' : 'output-line output-success';
+            line.textContent = message;
+            output.appendChild(line);
+            output.scrollTop = output.scrollHeight;
+        }
+        
+        function clearOutput() {
+            document.getElementById('output').innerHTML = '';
+        }
+        
+        function createSprite(name, x, y, emoji) {
+            const canvas = document.getElementById('game-canvas');
+            const sprite = document.createElement('div');
+            sprite.className = 'sprite';
+            sprite.textContent = emoji;
+            sprite.style.left = x + 'px';
+            sprite.style.top = y + 'px';
+            canvas.appendChild(sprite);
+            
+            sprites[name] = {
+                element: sprite,
+                x: x,
+                y: y,
+                emoji: emoji
+            };
+            
+            gameState[name] = { x, y };
+        }
+        
+        function moveSprite(name, direction, distance) {
+            if (!sprites[name]) return;
+            
+            const sprite = sprites[name];
+            
+            switch(direction.toLowerCase()) {
+                case 'up':
+                    sprite.y -= distance;
+                    break;
+                case 'down':
+                    sprite.y += distance;
+                    break;
+                case 'left':
+                    sprite.x -= distance;
+                    break;
+                case 'right':
+                    sprite.x += distance;
+                    break;
+            }
+            
+            sprite.element.style.left = sprite.x + 'px';
+            sprite.element.style.top = sprite.y + 'px';
+            
+            if (gameState[name]) {
+                gameState[name].x = sprite.x;
+                gameState[name].y = sprite.y;
+            }
+        }
+        
+        function showMessage(text, duration) {
+            return new Promise(resolve => {
+                const canvas = document.getElementById('game-canvas');
+                const msg = document.createElement('div');
+                msg.style.position = 'absolute';
+                msg.style.top = '50%';
+                msg.style.left = '50%';
+                msg.style.transform = 'translate(-50%, -50%)';
+                msg.style.background = 'rgba(0, 0, 0, 0.9)';
+                msg.style.color = '#4ecca3';
+                msg.style.padding = '20px 30px';
+                msg.style.borderRadius = '10px';
+                msg.style.fontSize = '20px';
+                msg.style.border = '2px solid #4ecca3';
+                msg.style.zIndex = '1000';
+                msg.textContent = text;
+                canvas.appendChild(msg);
+                
+                setTimeout(() => {
+                    canvas.removeChild(msg);
+                    resolve();
+                }, duration);
+            });
+        }
+        
+        function updateDisplay(property, value) {
+            if (property.includes('health')) {
+                document.getElementById('health-display').textContent = `❤️ Health: ${value}`;
+            } else if (property.includes('score')) {
+                document.getElementById('score-display').textContent = `⭐ Score: ${value}`;
+            }
+        }
+        
+        async function executeCommand(command) {
+            if (!isRunning) return;
+            
+            command = command.trim();
+            if (!command || command.startsWith('//')) return;
+            
+            const spawnMatch = command.match(/SPAWN (\w+) AT (\d+),\s*(\d+) AS (.+)/i);
+            if (spawnMatch) {
+                const [, name, x, y, emoji] = spawnMatch;
+                createSprite(name, parseInt(x), parseInt(y), emoji.trim());
+                log(`✓ Spawned ${name} at (${x}, ${y})`);
+                return;
+            }
+            
+            const moveMatch = command.match(/MOVE (\w+) (UP|DOWN|LEFT|RIGHT) (\d+)/i);
+            if (moveMatch) {
+                const [, name, direction, distance] = moveMatch;
+                moveSprite(name, direction, parseInt(distance));
+                log(`✓ Moved ${name} ${direction} by ${distance}`);
+                await new Promise(resolve => setTimeout(resolve, 300));
+                return;
+            }
+            
+            const sayMatch = command.match(/SAY "(.+)" FOR (\d+)/i);
+            if (sayMatch) {
+                const [, text, duration] = sayMatch;
+                log(`💬 "${text}"`);
+                await showMessage(text, parseInt(duration));
+                return;
+            }
+            
+            const waitMatch = command.match(/WAIT (\d+)/i);
+            if (waitMatch) {
+                const duration = parseInt(waitMatch[1]);
+                await new Promise(resolve => setTimeout(resolve, duration));
+                return;
+            }
+            
+            const setMatch = command.match(/SET (\w+)\.(\w+) TO (.+)/i);
+            if (setMatch) {
+                const [, name, property, value] = setMatch;
+                if (!gameState[name]) gameState[name] = {};
+                const numValue = isNaN(value) ? value : parseFloat(value);
+                gameState[name][property] = numValue;
+                updateDisplay(`${name}.${property}`, numValue);
+                log(`✓ Set ${name}.${property} = ${numValue}`);
+                return;
+            }
+            
+            const addMatch = command.match(/ADD (\d+) TO (\w+)\.?(\w+)?/i);
+            if (addMatch) {
+                const [, value, name, property] = addMatch;
+                if (property) {
+                    if (!gameState[name]) gameState[name] = {};
+                    if (gameState[name][property] === undefined) gameState[name][property] = 0;
+                    gameState[name][property] += parseFloat(value);
+                    updateDisplay(`${name}.${property}`, gameState[name][property]);
+                    log(`✓ Added ${value} to ${name}.${property} (now ${gameState[name][property]})`);
+                }
+                return;
+            }
+            
+            const subtractMatch = command.match(/SUBTRACT (\d+) FROM (\w+)\.?(\w+)?/i);
+            if (subtractMatch) {
+                const [, value, name, property] = subtractMatch;
+                if (property) {
+                    if (!gameState[name]) gameState[name] = {};
+                    if (gameState[name][property] === undefined) gameState[name][property] = 0;
+                    gameState[name][property] -= parseFloat(value);
+                    updateDisplay(`${name}.${property}`, gameState[name][property]);
+                    log(`✓ Subtracted ${value} from ${name}.${property} (now ${gameState[name][property]})`);
+                }
+                return;
+            }
+        }
+        
+        async function executeProgram(code) {
+            const lines = code.split('\n');
+            let i = 0;
+            
+            while (i < lines.length && isRunning) {
+                const line = lines[i].trim();
+                
+                if (line.startsWith('IF')) {
+                    const conditionMatch = line.match(/IF (.+) THEN/i);
+                    if (conditionMatch) {
+                        const condition = conditionMatch[1];
+                        const conditionResult = evaluateCondition(condition);
+                        
+                        if (conditionResult) {
+                            i++;
+                            while (i < lines.length && !lines[i].trim().startsWith('END')) {
+                                await executeCommand(lines[i]);
+                                i++;
+                            }
+                        } else {
+                            while (i < lines.length && !lines[i].trim().startsWith('END')) {
+                                i++;
+                            }
+                        }
+                    }
+                } else if (!line.startsWith('END')) {
+                    await executeCommand(line);
+                }
+                
+                i++;
+            }
+            
+            if (isRunning) {
+                log('✓ Quest complete!');
+            }
+            isRunning = false;
+        }
+        
+        function evaluateCondition(condition) {
+            try {
+                const varMatch = condition.match(/(\w+)\.(\w+)\s*([><=!]+)\s*(\d+)/);
+                if (varMatch) {
+                    const [, name, property, operator, value] = varMatch;
+                    const varValue = gameState[name]?.[property] ?? 0;
+                    const numValue = parseFloat(value);
+                    
+                    switch (operator) {
+                        case '>': return varValue > numValue;
+                        case '<': return varValue < numValue;
+                        case '>=': return varValue >= numValue;
+                        case '<=': return varValue <= numValue;
+                        case '==': return varValue == numValue;
+                        case '!=': return varValue != numValue;
+                    }
+                }
+                return false;
+            } catch (e) {
+                return false;
+            }
+        }
+        
+        function runCode() {
+            if (isRunning) {
+                log('⚠ Quest already running!', true);
+                return;
+            }
+            
+            clearOutput();
+            clearCanvas();
+            
+            const code = document.getElementById('code-editor').value;
+            isRunning = true;
+            log('🎮 Starting quest...');
+            
+            executeProgram(code).catch(error => {
+                log(`❌ Error: ${error.message}`, true);
+                isRunning = false;
+            });
+        }
+        
+        function stopCode() {
+            isRunning = false;
+            log('⏹️ Quest stopped');
+        }
+        
+        function clearCanvas() {
+            const canvas = document.getElementById('game-canvas');
+            const spritesToRemove = canvas.querySelectorAll('.sprite');
+            spritesToRemove.forEach(s => s.remove());
+            sprites = {};
+            gameState = {};
+            document.getElementById('health-display').textContent = '❤️ Health: --';
+            document.getElementById('score-display').textContent = '⭐ Score: --';
+        }
+        
+        function loadExample(exampleName) {
+            if (isRunning) {
+                stopCode();
+                setTimeout(() => {
+                    document.getElementById('code-editor').value = examples[exampleName];
+                }, 100);
+            } else {
+                document.getElementById('code-editor').value = examples[exampleName];
+            }
+        }
+    </script>
+</body>
+</html>
